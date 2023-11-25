@@ -31,8 +31,12 @@ class ServiceContainerTest extends TestCase {
 
 		$container->set( $name = 'service', $value = [ 'array' ] );
 		self::assertSame( $value, $container->get( $name ) );
+	}
 
+	public function test_get__object() {
+		$container = new ServiceContainer();
 		$container->set( $name = 'service', $value = new stdClass() );
+
 		self::assertSame( $value, $container->get( $name ) );
 	}
 
@@ -42,10 +46,10 @@ class ServiceContainerTest extends TestCase {
 		$container->set( $name = 'service', $value = function () {
 			return new stdClass();
 		} );
-		self::assertInstanceOf( stdClass::class, $container->get( $name ) );
+		self::assertEquals( new stdClass(), $container->get( $name ) );
 	}
 
-	public function test_get__callback_with_parametres() {
+	public function test_get__callback_with_param() {
 		$container = new ServiceContainer();
 
 		$container->set( $name_title = 'title', $value_title = 'Title of article' );
@@ -61,30 +65,27 @@ class ServiceContainerTest extends TestCase {
 		self::assertEquals( $obj, $container->get( $name_service ) );
 	}
 
-//	public function test_get_static_method_from_array() {
-//		$container = new ServiceContainer();
-//
-//		$container->set( $name = 'service', [ StaticClass::class, 'get_string' ] );
-//		self::assertSame( StaticClass::get_string(), $container->get( $name ) );
-//	}
-//
-//	public function test_get_static_method_from_array2() {
-//		$container = new ServiceContainer();
-//
-//		$container->set( $name = 'service', [ StaticClass::class, 'get_string' ] );
-//		self::assertSame( StaticClass::get_string(), $container->get( $name ) );
-//	}
-
-	public function test_get_object_from_string() {
+	public function test_get__object_from_class() {
 		$container = new ServiceContainer();
 
-		$container->set( $name = 'service', 'PisarevskiiTests\SimpleDIC\Assets\SimpleClass' );
-		self::assertInstanceOf( SimpleClass::class, $container->get( $name ) );
+		$container->set( $name = 'service', SimpleClass::class );
+		self::assertEquals( new SimpleClass(), $container->get( $name ) );
+
+		$container->set( $name2 = 'service2', 'PisarevskiiTests\SimpleDIC\Assets\SimpleClass' );
+		self::assertEquals( new SimpleClass(), $container->get( $name2 ) );
+	}
+
+	// TODO:: do we need it?
+	public function test_get__static_method_from_array() {
+		$container = new ServiceContainer();
+
+		$container->set( $name = 'service', [ StaticClass::class, 'get_string' ] );
+		self::assertSame( StaticClass::get_string(), $container->get( $name ) );
 	}
 
 	public function test_has() {
 		$container = new ServiceContainer();
-		$container->set( $name = 'service', $target_object = new stdClass() );
+		$container->set( $name = 'service', new stdClass() );
 
 		self::assertTrue( $container->has( $name ) );
 		self::assertFalse( $container->has( 'not-exist' ) );
