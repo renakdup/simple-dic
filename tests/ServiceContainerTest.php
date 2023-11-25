@@ -17,7 +17,7 @@ class ServiceContainerTest extends TestCase {
 	 * @throws \Psr\Container\ContainerExceptionInterface
 	 * @throws \Psr\Container\NotFoundExceptionInterface
 	 */
-	public function test_get_primitives() {
+	public function test_get__primitives() {
 		$container = new ServiceContainer();
 
 		$container->set( $name = 'service', $value = 1 );
@@ -36,13 +36,29 @@ class ServiceContainerTest extends TestCase {
 		self::assertSame( $value, $container->get( $name ) );
 	}
 
-	public function test_get_callbacks() {
+	public function test_get__callbacks() {
 		$container = new ServiceContainer();
 
 		$container->set( $name = 'service', $value = function () {
 			return new stdClass();
 		} );
 		self::assertInstanceOf( stdClass::class, $container->get( $name ) );
+	}
+
+	public function test_get__callback_with_parametres() {
+		$container = new ServiceContainer();
+
+		$container->set( $name_title = 'title', $value_title = 'Title of article' );
+		$container->set( $name_service = 'service', function ($c) use ($name_title) {
+			$obj = new stdClass();
+			$obj->title = $c->get($name_title);
+			return $obj;
+		} );
+
+		$obj = new stdClass();
+		$obj->title = $value_title;
+
+		self::assertEquals( $obj, $container->get( $name_service ) );
 	}
 
 //	public function test_get_static_method_from_array() {

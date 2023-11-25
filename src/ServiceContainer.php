@@ -28,15 +28,16 @@ class ServiceContainer implements ContainerInterface {
 		$service = $this->services[ $id ];
 
 		if ( is_callable($this->services[ $id ] ) ) {
-			return $this->services[ $id ]();
+			return $this->services[ $id ]( $this );
 		}
 
 //		if ( $service instanceof Closure ) {
 //			return $service();
 //		}
 
+		// static method
 		if ( is_string($service) && class_exists( $service ) ) {
-			return new $service();
+			return new $service( $this );
 		}
 
 		return $service;
