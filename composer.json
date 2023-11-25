@@ -1,0 +1,34 @@
+{
+    "name": "pisarevskii/simple-dic",
+    "description": "Simple DI Container with autowiring for your PHP application or WordPress plugin.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andrei Pisarevskii",
+            "email": "renakdup@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^7.4",
+        "psr/container": "^2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.6.13",
+        "symfony/var-dumper": "^5.4"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Pisarevskii\\SimpleDIC\\": "src/",
+            "PisarevskiiTests\\SimpleDIC\\": "tests/"
+        }
+    },
+    "scripts": {
+        "phpcs": "phpcs --standard=./phpcs.xml",
+        "phpcbf": "phpcbf --standard=./phpcs.xml",
+        "phpunit": "phpunit",
+        "phpunit-report-html": "php -dpcov.enabled=1 -dpcov.directory=/var/www/html ./vendor/bin/phpunit --coverage-html ./tmp/phpunit/coverage-report-html",
+        "phpunit-report-clover": "php -dpcov.enabled=1 -dpcov.directory=/var/www/html ./vendor/bin/phpunit --coverage-clover ./tmp/phpunit/clover.xml"
+    }
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         bootstrap="vendor/autoload.php"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         colors="true"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd
+        ">
+    <coverage includeUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">/</directory>
+        </include>
+    </coverage>
+
+    <testsuites>
+        <testsuite name="pisarevskii-simple-dic Test Suite">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
