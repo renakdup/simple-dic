@@ -5,6 +5,7 @@ declare( strict_types=1 );
 namespace Pisarevskii\SimpleDIC;
 
 use Closure;
+use InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -23,16 +24,10 @@ class ServiceContainer implements ContainerInterface {
 	 */
 	public function get( string $id ) {
 		if ( ! $this->has( $id ) ) {
-			throw new \Exception( "Service '{$id}' not found." );
+			throw new ServiceContainerNotFoundException( "Service '{$id}' not found in the ServiceContainer." );
 		}
 
 		$service = $this->services[ $id ];
-
-		// closure, callable arrays, function in string,
-//		dump($id, $this->services[ $id ], is_callable($this->services[ $id ] ));
-//		if ( is_callable($this->services[ $id ] ) ) {
-//			return $this->services[ $id ]( $this );
-//		}
 
 		if ( $service instanceof Closure ) {
 			return $service( $this );
@@ -54,12 +49,21 @@ class ServiceContainer implements ContainerInterface {
 
 			$constructor_args = [];
 			foreach ( $params as $param ) {
-				$param_class = $param->getType()->getName();
-				if ( class_exists( $param_class ) ) {
-					if ( $this->has( $param_class ) ) {
-						$constructor_args[] = $this->get( $param_class );
-					}
+				if ( $param_class = $param->getClass() ) {
+					$constructor_args[] = $this->get( $param_class->getName() );
+					continue;
 				}
+
+				try {
+					$default_value = $param->getDefaultValue();
+					if ( ! $default_value && $default_value !== null ) {
+						throw new ServiceContainerException( 'Service "' . $reflected_class->getName() . '" could not be resolved due constructor parameter "' . $param->getName() . '"' );
+					}
+				} catch ( \ReflectionException $e ) {
+					throw new ServiceContainerException( 'Service "' . $reflected_class->getName() . '" could not be resolved due the Reflection issue: ' . $e->getMessage() );
+				}
+
+				$constructor_args[] = $default_value;
 			}
 
 			return new $service( ...$constructor_args );
@@ -74,5 +78,12 @@ class ServiceContainer implements ContainerInterface {
 	public function has( string $id ): bool {
 		return isset( $this->services[ $id ] );
 	}
+}
+
+class ServiceContainerNotFoundException extends InvalidArgumentException implements NotFoundExceptionInterface {
+
+}
+
+class ServiceContainerException extends InvalidArgumentException implements ContainerExceptionInterface {
 
 }

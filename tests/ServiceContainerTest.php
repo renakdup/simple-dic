@@ -6,8 +6,11 @@ namespace PisarevskiiTests\SimpleDIC;
 
 use PHPUnit\Framework\TestCase;
 use Pisarevskii\SimpleDIC\ServiceContainer;
+use Pisarevskii\SimpleDIC\ServiceContainerException;
+use Pisarevskii\SimpleDIC\ServiceContainerNotFoundException;
 use PisarevskiiTests\SimpleDIC\Assets\ClassWithConstructorDeps;
 use PisarevskiiTests\SimpleDIC\Assets\ClassWithConstructorDeps2;
+use PisarevskiiTests\SimpleDIC\Assets\ClassWithConstructorDepsException;
 use PisarevskiiTests\SimpleDIC\Assets\StaticClass;
 use PisarevskiiTests\SimpleDIC\Assets\SimpleClass;
 use stdClass;
@@ -92,6 +95,20 @@ final class ServiceContainerTest extends TestCase {
 		$obj3 = new ClassWithConstructorDeps2( $obj2 );
 		$this->container->bind( $name = ClassWithConstructorDeps2::class, ClassWithConstructorDeps2::class );
 		self::assertEquals( $obj3, $this->container->get( $name ) );
+	}
+
+	public function test_get__autowiring_not_found_exception() {
+		self::expectException( ServiceContainerNotFoundException::class );
+
+		$this->container->get( 'not-exist-service' );
+	}
+
+	public function test_get__autowiring_container_exception() {
+		self::expectException( ServiceContainerException::class );
+
+		$this->container->bind( SimpleClass::class, SimpleClass::class );
+		$this->container->bind( ClassWithConstructorDepsException::class, ClassWithConstructorDepsException::class );
+		$this->container->get( ClassWithConstructorDepsException::class );
 	}
 
 	// TODO:: do we need it?
