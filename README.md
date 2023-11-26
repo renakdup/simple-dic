@@ -57,6 +57,7 @@ $container->set('config.', ['one', 'two, 'three']);
 ## Roadmap
 - Add auto-wiring
 - Add supporting defaults primitives for autofilling
+- Add PSR7 interfaces in the same class.
 - Add bind with configuration?
 - Add singleton setter and getter
 - Add singleton getting for ServiceContainer
