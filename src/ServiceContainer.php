@@ -13,7 +13,7 @@ class ServiceContainer implements ContainerInterface {
 
 	protected array $services = [];
 
-	public function set( string $id, $service ): void {
+	public function bind( string $id, $service ): void {
 		$this->services[ $id ] = $service;
 	}
 
@@ -27,15 +27,18 @@ class ServiceContainer implements ContainerInterface {
 
 		$service = $this->services[ $id ];
 
-		if ( is_callable($this->services[ $id ] ) ) {
-			return $this->services[ $id ]( $this );
-		}
+		// closure,
 
-//		if ( $service instanceof Closure ) {
-//			return $service();
+//		dump($id, $this->services[ $id ], is_callable($this->services[ $id ] ));
+//		if ( is_callable($this->services[ $id ] ) ) {
+//			return $this->services[ $id ]( $this );
 //		}
 
-		// static method
+		if ( $service instanceof Closure ) {
+			return $service( $this );
+		}
+
+		// passed class name
 		if ( is_string($service) && class_exists( $service ) ) {
 			return new $service( $this );
 		}

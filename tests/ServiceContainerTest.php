@@ -20,22 +20,22 @@ class ServiceContainerTest extends TestCase {
 	public function test_get__primitives() {
 		$container = new ServiceContainer();
 
-		$container->set( $name = 'service', $value = 1 );
+		$container->bind( $name = 'service', $value = 1 );
 		self::assertSame( $value, $container->get( $name ) );
 
-		$container->set( $name = 'service', $value = '5' );
+		$container->bind( $name = 'service', $value = '5' );
 		self::assertSame( $value, $container->get( $name ) );
 
-		$container->set( $name = 'service', $value = 'string' );
+		$container->bind( $name = 'service', $value = 'string' );
 		self::assertSame( $value, $container->get( $name ) );
 
-		$container->set( $name = 'service', $value = [ 'array' ] );
+		$container->bind( $name = 'service', $value = [ 'array' ] );
 		self::assertSame( $value, $container->get( $name ) );
 	}
 
 	public function test_get__object() {
 		$container = new ServiceContainer();
-		$container->set( $name = 'service', $value = new stdClass() );
+		$container->bind( $name = 'service', $value = new stdClass() );
 
 		self::assertSame( $value, $container->get( $name ) );
 	}
@@ -43,7 +43,7 @@ class ServiceContainerTest extends TestCase {
 	public function test_get__callbacks() {
 		$container = new ServiceContainer();
 
-		$container->set( $name = 'service', $value = function () {
+		$container->bind( $name = 'service', $value = function () {
 			return new stdClass();
 		} );
 		self::assertEquals( new stdClass(), $container->get( $name ) );
@@ -52,8 +52,8 @@ class ServiceContainerTest extends TestCase {
 	public function test_get__callback_with_param() {
 		$container = new ServiceContainer();
 
-		$container->set( $name_title = 'title', $value_title = 'Title of article' );
-		$container->set( $name_service = 'service', function ($c) use ($name_title) {
+		$container->bind( $name_title = 'title', $value_title = 'Title of article' );
+		$container->bind( $name_service = 'service', function ($c) use ($name_title) {
 			$obj = new stdClass();
 			$obj->title = $c->get($name_title);
 			return $obj;
@@ -68,24 +68,24 @@ class ServiceContainerTest extends TestCase {
 	public function test_get__object_from_class() {
 		$container = new ServiceContainer();
 
-		$container->set( $name = 'service', SimpleClass::class );
+		$container->bind( $name = 'service', SimpleClass::class );
 		self::assertEquals( new SimpleClass(), $container->get( $name ) );
 
-		$container->set( $name2 = 'service2', 'PisarevskiiTests\SimpleDIC\Assets\SimpleClass' );
+		$container->bind( $name2 = 'service2', 'PisarevskiiTests\SimpleDIC\Assets\SimpleClass' );
 		self::assertEquals( new SimpleClass(), $container->get( $name2 ) );
 	}
 
 	// TODO:: do we need it?
-	public function test_get__static_method_from_array() {
-		$container = new ServiceContainer();
-
-		$container->set( $name = 'service', [ StaticClass::class, 'get_string' ] );
-		self::assertSame( StaticClass::get_string(), $container->get( $name ) );
-	}
+//	public function test_get__static_method_from_array() {
+//		$container = new ServiceContainer();
+//
+//		$container->bind( $name = 'service', [ StaticClass::class, 'get_string' ] );
+//		self::assertSame( StaticClass::get_string(), $container->get( $name ) );
+//	}
 
 	public function test_has() {
 		$container = new ServiceContainer();
-		$container->set( $name = 'service', new stdClass() );
+		$container->bind( $name = 'service', new stdClass() );
 
 		self::assertTrue( $container->has( $name ) );
 		self::assertFalse( $container->has( 'not-exist' ) );
