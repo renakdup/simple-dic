@@ -54,15 +54,17 @@ $container->set('config.', ['one', 'two, 'three']);
 ```
 
 ## Roadmap
-- Add auto-wiring
-- Add supporting defaults primitives for autofilling
-- Add PSR7 interfaces in the ServiceContainer.php.
-- Add bind with configuration?
-- Add singleton setter and getter
-- Add singleton getting for ServiceContainer
-- Choose codestyle
-- Integrate CI
-- Add badges with tests passed
-- Save cache in opcache?
-- Add configurations of ServiceContainer.
-- Add on packegist
+- [x] Add binding services with configuration
+- [x] Add auto-wiring for registered classes in DIC
+- [x] Add auto-wiring for defaults primitives for auto-fillings
+- [ ] Check invocable class creating
+- [ ] Add PSR7 interfaces in the ServiceContainer.php.
+- [ ] Add singleton getting for ServiceContainer
+- [ ] Add singleton setter and getter
+- [ ] Choose codestyle
+- [ ] Integrate CI
+- [ ] PHP 8 named arguments and autowiring
+- [ ] Add badges with tests passed
+- [ ] Save cache in opcache?
+- [ ] Add configurations of ServiceContainer.
+- [ ] Add on packegist
