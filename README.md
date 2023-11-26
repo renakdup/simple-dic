@@ -1,12 +1,13 @@
 # Simple DI Container for WordPress
 Simple DI Container for WordPress with autowiring allows you easily use it in your plugins and themes.
 
-## Why Simple DI Container?
+## Why choose Simple DI Container?
 1. Easy to integrate into your project, just copy 1 file.
 2. Simple DI Conteiner hasn't any dependencies on other scripts or libraries.
 3. Supports Autowiring.
 4. Allow you following the best practices while development.
-5. Almost PSR7 compatible.
+
+[//]: # (5. Almost PSR7 compatible.)
 
 
 ## How to integrate it in a project?
