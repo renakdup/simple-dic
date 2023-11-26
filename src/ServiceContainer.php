@@ -1,4 +1,12 @@
 <?php
+/**
+ * Simple PHP DI Container (DIC) for WordPress with auto-wiring allows
+ * you easily use it in your plugins and themes.
+ *
+ * Author: Andrei Pisarevskii
+ * Author Email: renakdup@gmail.com
+ * Source code: https://github.com/renakdup/simple-wordpress-dic
+ */
 
 declare( strict_types=1 );
 
@@ -6,11 +14,59 @@ namespace Pisarevskii\SimpleDIC;
 
 use Closure;
 use InvalidArgumentException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use ReflectionClass;
 
+######## PSR7 2.0 interfaces #########
+# If you want to support PSR 7, then remove 3 interfaces below
+# (ContainerInterface, ContainerExceptionInterface, NotFoundExceptionInterface)
+# and import PSR7 interfaces in this file:
+# -----
+# use Psr\Container\ContainerExceptionInterface;
+# use Psr\Container\ContainerInterface;
+# use Psr\Container\NotFoundExceptionInterface;
+###############################
+interface ContainerInterface {
+	/**
+	 * Finds an entry of the container by its identifier and returns it.
+	 *
+	 * @param string $id Identifier of the entry to look for.
+	 *
+	 * @return mixed Entry.
+	 * @throws ContainerExceptionInterface Error while retrieving the entry.
+	 *
+	 * @throws NotFoundExceptionInterface  No entry was found for **this** identifier.
+	 */
+	public function get( string $id );
+
+	/**
+	 * Returns true if the container can return an entry for the given identifier.
+	 * Returns false otherwise.
+	 *
+	 * `has($id)` returning true does not mean that `get($id)` will not throw an exception.
+	 * It does however mean that `get($id)` will not throw a `NotFoundExceptionInterface`.
+	 *
+	 * @param string $id Identifier of the entry to look for.
+	 *
+	 * @return bool
+	 */
+	public function has( string $id ): bool;
+}
+
+/**
+ * Base interface representing a generic exception in a container.
+ */
+interface ContainerExceptionInterface extends \Throwable {}
+
+/**
+ * No entry was found in the container.
+ */
+interface NotFoundExceptionInterface extends ContainerExceptionInterface {}
+######## PSR7 interfaces - END #########
+
+
+###############################
+#     Simple DIC code
+###############################
 class ServiceContainer implements ContainerInterface {
 
 	protected array $services = [];
@@ -80,10 +136,7 @@ class ServiceContainer implements ContainerInterface {
 	}
 }
 
-class ServiceContainerNotFoundException extends InvalidArgumentException implements NotFoundExceptionInterface {
+class ServiceContainerNotFoundException extends InvalidArgumentException implements NotFoundExceptionInterface {}
 
-}
+class ServiceContainerException extends InvalidArgumentException implements ContainerExceptionInterface {}
 
-class ServiceContainerException extends InvalidArgumentException implements ContainerExceptionInterface {
-
-}

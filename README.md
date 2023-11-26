@@ -1,13 +1,12 @@
 # Simple DI Container for WordPress
-Simple DI Container for WordPress with auto-wiring allows you easily use it in your plugins and themes.
+Simple DI Container with auto-wiring allows you to easily use it in your WordPress plugins and themes.
 
 ## Why choose Simple DI Container?
-1. Easy to integrate into your project, just copy 1 file.
-2. Simple DI Conteiner hasn't any dependencies on other scripts or libraries.
-3. Supports Autowiring.
-4. Allow you following the best practices while development.
-5. Almost PSR7 compatible. Just need to rename
-
+1. Easy to integrate into your WordPress project, just copy 1 file.
+2. Simple DI Container hasn't any dependencies on other scripts or libraries.
+3. Supports auto-wiring.
+4. Allow you following the best practices for developing your code.
+5. PSR7 support can be activated (read more about below).
 
 ## How to integrate it in a project?
 1. Just copy the file `./src/ServiceContainer.php` to your plugin directory or theme.
@@ -20,10 +19,12 @@ That's it!
 
 Simple example:
 ```
+use Pisarevskii\SimpleDIC\ServiceContainer;
+
 // create the container
 $container = new ServiceContainer();
 
-// set a service
+// set the service
 $container->set(Paypal::class, function () {
     return new Paypal();
 } );
@@ -35,19 +36,41 @@ $paypal = $container->get(Paypal::class);
 $paypal->pay();
 ```
 
-If you want, you can use conainer inside a factory
+If you want, you can use container inside a factory
 ```
 $container->set('config', [
     'currency' => '$',
     'environment' => 'production',
 ]);
 
-$container->set(Paypal::class, function ($container) {
+$container->set(Paypal::class, function (ServiceContainer $c) {
     return new Paypal($c->get('config'));
 } );
 ```
 
-Other examples
+## PSR7 Compatibility
+This Simple DI Container compatible with PSR7 standards ver 2.0, to use it:
+1. Just import PSR7 interfaces in `ServiceContainer.php`
+```
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
+```
+2. Remove PSR7 interfaces from the `ServiceContainer.php` file:
+```
+######## PSR7 2.0 interfaces #########
+
+..... PSR7 interfaces
+
+######## PSR7 interfaces - END #########
+```
+
+> [!NOTE]
+> Some plugins use PSR 7 interfaces and these files are stored inside these plugins as well as PSR interfaces have versions and are usually not compatible between major versions.  
+> Due that I highly recommend you keep these interfaces inside the file and use PSR 7 interfaces with your namespace.
+
+
+## More examples
 ```
 $container->set('config.requests-limit', 100);
 $container->set('config.', ['one', 'two, 'three']);
@@ -58,9 +81,10 @@ $container->set('config.', ['one', 'two, 'three']);
 - [x] Add auto-wiring for registered classes in DIC
 - [x] Add auto-wiring for defaults primitives for auto-fillings
 - [x] Add supporting invocable class
+- [x] Add PSR7 interfaces in the ServiceContainer.php.
+- [ ] Add autowiring support for not binded classes.
 - [ ] Add singleton setter and getter
 - [ ] Add singleton getting for ServiceContainer
-- [ ] Add PSR7 interfaces in the ServiceContainer.php.
 - [ ] Integrate CI
 - [ ] Add badges with tests passed
 - [ ] PHP 8 named arguments and autowiring
