@@ -6,6 +6,7 @@
  * Author: Andrei Pisarevskii
  * Author Email: renakdup@gmail.com
  * Source code: https://github.com/renakdup/simple-wordpress-dic
+ * Licence: MIT License
  */
 
 declare( strict_types=1 );
