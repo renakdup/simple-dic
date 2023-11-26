@@ -1,8 +1,8 @@
 # Simple DI Container for WordPress
-Simple DI Container with auto-wiring allows you to easily use it in your WordPress plugins and themes.
+Simple DI Container with auto-wiring in a single file allows you to easily use it in your WordPress plugins and themes. 
 
 ## Why choose Simple DI Container?
-1. Easy to integrate into your WordPress project, just copy 1 file.
+1. Easy to integrate into your WordPress project, just copy one file.
 2. Simple DI Container hasn't any dependencies on other scripts or libraries.
 3. Supports auto-wiring.
 4. Allow you following the best practices for developing your code.
@@ -10,13 +10,10 @@ Simple DI Container with auto-wiring allows you to easily use it in your WordPre
 
 ## How to integrate it in a project?
 1. Just copy the file `./src/ServiceContainer.php` to your plugin directory or theme.
-2. Rename `namespace` in the file from `Pisarevskii\SimpleDIC` to `<Your_Project_Name>\SimpleDIC`
-3. Include this file.
-
-That's it!
+2. Rename `namespace` in the file from `Pisarevskii\SimpleDIC` to `<Your_Plugin_Name>\SimpleDIC`
+3. Require this file.
 
 ## How to use it in code
-
 Simple example:
 ```
 use Pisarevskii\SimpleDIC\ServiceContainer;
@@ -24,12 +21,12 @@ use Pisarevskii\SimpleDIC\ServiceContainer;
 // create the container
 $container = new ServiceContainer();
 
-// set the service
+// set service
 $container->set(Paypal::class, function () {
     return new Paypal();
 } );
 
-// get the service
+// get service
 $paypal = $container->get(Paypal::class);
 
 // use this object
@@ -67,7 +64,7 @@ use Psr\Container\NotFoundExceptionInterface;
 
 > [!NOTE]
 > Some plugins use PSR 7 interfaces and these files are stored inside these plugins as well as PSR interfaces have versions and are usually not compatible between major versions.  
-> Due that I highly recommend you keep these interfaces inside the file and use PSR 7 interfaces with your namespace.
+> **Due that I highly recommend you keep these interfaces inside the file and use PSR7 interfaces under your Plugin/Theme namespace.**
 
 
 ## More examples
@@ -82,7 +79,7 @@ $container->set('config.', ['one', 'two, 'three']);
 - [x] Add auto-wiring for defaults primitives for auto-fillings
 - [x] Add supporting invocable class
 - [x] Add PSR7 interfaces in the ServiceContainer.php.
-- [ ] Add autowiring support for not binded classes.
+- [ ] Add autowiring support for not bind classes.
 - [ ] Add singleton setter and getter
 - [ ] Add singleton getting for ServiceContainer
 - [ ] Integrate CI
