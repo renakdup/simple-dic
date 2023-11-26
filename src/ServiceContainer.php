@@ -68,7 +68,6 @@ interface NotFoundExceptionInterface extends ContainerExceptionInterface {}
 #     Simple DIC code
 ###############################
 class ServiceContainer implements ContainerInterface {
-
 	protected array $services = [];
 
 	public function bind( string $id, $service ): void {
@@ -83,8 +82,10 @@ class ServiceContainer implements ContainerInterface {
 			throw new ServiceContainerNotFoundException( "Service '{$id}' not found in the ServiceContainer." );
 		}
 
-		$service = $this->services[ $id ];
+		return $this->resolve_service( $this->services[ $id ] );
+	}
 
+	private function resolve_service( $service ) {
 		if ( $service instanceof Closure ) {
 			return $service( $this );
 		}
@@ -106,7 +107,12 @@ class ServiceContainer implements ContainerInterface {
 			$constructor_args = [];
 			foreach ( $params as $param ) {
 				if ( $param_class = $param->getClass() ) {
-					$constructor_args[] = $this->get( $param_class->getName() );
+					if ( $this->has( $param_class->getName() ) ) {
+						$constructor_args[] = $this->get( $param_class->getName() );
+						continue;
+					}
+
+					$constructor_args[] = $this->resolve_service( $param_class->getName() );
 					continue;
 				}
 
@@ -116,7 +122,7 @@ class ServiceContainer implements ContainerInterface {
 						throw new ServiceContainerException( 'Service "' . $reflected_class->getName() . '" could not be resolved due constructor parameter "' . $param->getName() . '"' );
 					}
 				} catch ( \ReflectionException $e ) {
-					throw new ServiceContainerException( 'Service "' . $reflected_class->getName() . '" could not be resolved due the Reflection issue: ' . $e->getMessage() );
+					throw new ServiceContainerException( 'Service "' . $reflected_class->getName() . '" could not be resolved because parameter of constructor "' . $param . '" has the Reflection issue while resolving: ' . $e->getMessage() );
 				}
 
 				$constructor_args[] = $default_value;

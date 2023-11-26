@@ -14,6 +14,7 @@ use PisarevskiiTests\SimpleDIC\Assets\ClassWithConstructorDeps2;
 use PisarevskiiTests\SimpleDIC\Assets\ClassWithConstructorDepsException;
 use PisarevskiiTests\SimpleDIC\Assets\StaticClass;
 use PisarevskiiTests\SimpleDIC\Assets\SimpleClass;
+use SplQueue;
 use stdClass;
 
 final class ServiceContainerTest extends TestCase {
@@ -83,7 +84,7 @@ final class ServiceContainerTest extends TestCase {
 		self::assertEquals( new SimpleClass(), $this->container->get( $name2 ) );
 	}
 
-	public function test_get__autowiring() {
+	public function test_get__autowiring_for_bind() {
 		$obj1 = new SimpleClass();
 		$this->container->bind( $name = SimpleClass::class, SimpleClass::class );
 		self::assertEquals( new SimpleClass(), $this->container->get( $name ) );
@@ -97,7 +98,7 @@ final class ServiceContainerTest extends TestCase {
 		self::assertEquals( $obj3, $this->container->get( $name ) );
 	}
 
-	public function test_get__autowiring_invocable() {
+	public function test_get__autowiring_for_bind_invocable() {
 		$this->container->bind( SimpleClass::class, SimpleClass::class );
 		$this->container->bind( $name = ClassInvocable::class, ClassInvocable::class );
 
@@ -105,13 +106,31 @@ final class ServiceContainerTest extends TestCase {
 		self::assertSame( 'Function is called from ClassInvocable', $this->container->get( $name )() );
 	}
 
-	public function test_get__autowiring_container_not_found_exception() {
+	public function test_get__autowiring_not_bonded_deps() {
+		$obj1 = new SimpleClass();
+		$obj2 = new ClassWithConstructorDeps( $obj1 );
+		$obj3 = new ClassWithConstructorDeps2( $obj2 );
+
+		$this->container->bind( $name = ClassWithConstructorDeps2::class, ClassWithConstructorDeps2::class );
+		self::assertEquals( $obj3, $this->container->get( $name ) );
+
+		$this->container->bind( SplQueue::class , SplQueue::class );
+		self::assertInstanceOf( SplQueue::class, $this->container->get( SplQueue::class ) );
+	}
+
+	public function test_get__bind_autowiring_container_not_found_exception_string() {
 		self::expectException( ServiceContainerNotFoundException::class );
 
 		$this->container->get( 'not-exist-service' );
 	}
 
-	public function test_get__autowiring_container_exception() {
+	public function test_get__bind_autowiring_container_not_found_exception_class() {
+		self::expectException( ServiceContainerNotFoundException::class );
+
+		$this->container->get( \stdClass::class );
+	}
+
+	public function test_get__autowiring__container_exception() {
 		self::expectException( ServiceContainerException::class );
 
 		$this->container->bind( SimpleClass::class, SimpleClass::class );

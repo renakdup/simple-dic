@@ -4,7 +4,7 @@ Simple DI Container with auto-wiring in a single file allows you to easily use i
 ## Why choose Simple DI Container?
 1. Easy to integrate into your WordPress project, just copy one file.
 2. Simple DI Container hasn't any dependencies on other scripts or libraries.
-3. Supports auto-wiring.
+3. Supports auto-wiring `__constructor` parameters for classes as well as for scalar types that have default values.
 4. Allow you following the best practices for developing your code.
 5. PSR7 support can be activated (read more about below).
 
@@ -45,6 +45,7 @@ $container->set(Paypal::class, function (ServiceContainer $c) {
 } );
 ```
 
+
 ## PSR7 Compatibility
 This Simple DI Container compatible with PSR7 standards ver 2.0, to use it:
 1. Just import PSR7 interfaces in `ServiceContainer.php`
@@ -79,7 +80,7 @@ $container->set('config.', ['one', 'two, 'three']);
 - [x] Add auto-wiring for defaults primitives for auto-fillings
 - [x] Add supporting invocable class
 - [x] Add PSR7 interfaces in the ServiceContainer.php.
-- [ ] Add autowiring support for not bind classes.
+- [x] Add auto-wiring support for not bounded classes.
 - [ ] Add singleton setter and getter
 - [ ] Add singleton getting for ServiceContainer
 - [ ] Integrate CI
