@@ -30,9 +30,4 @@ class ClassWithConstructorDeps {
 		$this->number = $number;
 		$this->null = $null;
 	}
-
-	public function get_text_simple_class(): string {
-		return $this->simple_class->get_string_test();
-	}
-
 }

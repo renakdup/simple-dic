@@ -57,14 +57,14 @@ $container->set('config.', ['one', 'two, 'three']);
 - [x] Add binding services with configuration
 - [x] Add auto-wiring for registered classes in DIC
 - [x] Add auto-wiring for defaults primitives for auto-fillings
-- [ ] Check invocable class creating
-- [ ] Add PSR7 interfaces in the ServiceContainer.php.
-- [ ] Add singleton getting for ServiceContainer
+- [x] Add supporting invocable class
 - [ ] Add singleton setter and getter
-- [ ] Choose codestyle
+- [ ] Add singleton getting for ServiceContainer
+- [ ] Add PSR7 interfaces in the ServiceContainer.php.
 - [ ] Integrate CI
-- [ ] PHP 8 named arguments and autowiring
 - [ ] Add badges with tests passed
+- [ ] PHP 8 named arguments and autowiring
 - [ ] Save cache in opcache?
 - [ ] Add configurations of ServiceContainer.
+- [ ] Choose codestyle
 - [ ] Add on packegist

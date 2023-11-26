@@ -19,9 +19,4 @@ class ClassWithConstructorDepsException {
 		$this->string = $string;
 		$this->array = $array;
 	}
-
-	public function get_text_simple_class(): string {
-		return $this->simple_class->get_string_test();
-	}
-
 }

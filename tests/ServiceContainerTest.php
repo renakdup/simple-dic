@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Pisarevskii\SimpleDIC\ServiceContainer;
 use Pisarevskii\SimpleDIC\ServiceContainerException;
 use Pisarevskii\SimpleDIC\ServiceContainerNotFoundException;
+use PisarevskiiTests\SimpleDIC\Assets\ClassInvocable;
 use PisarevskiiTests\SimpleDIC\Assets\ClassWithConstructorDeps;
 use PisarevskiiTests\SimpleDIC\Assets\ClassWithConstructorDeps2;
 use PisarevskiiTests\SimpleDIC\Assets\ClassWithConstructorDepsException;
@@ -45,34 +46,33 @@ final class ServiceContainerTest extends TestCase {
 		self::assertSame( $value, $this->container->get( $name ) );
 	}
 
-	public function test_get__object() {
-		$this->container = new ServiceContainer();
+	public function test_get__simple_class() {
 		$this->container->bind( $name = 'service', $value = new stdClass() );
-
 		self::assertSame( $value, $this->container->get( $name ) );
 	}
 
-	public function test_get__callbacks() {
-		$this->container->bind( $name = 'service',
-			$value = function () {
-				return new stdClass();
-			} );
+	public function test_get__callback() {
+		$this->container->bind( $name = 'service', function () {
+			return new stdClass();
+		} );
 		self::assertEquals( new stdClass(), $this->container->get( $name ) );
 	}
 
-	public function test_get__callback_with_param() {
-		$this->container->bind( $name_title = 'title', $value_title = 'Title of article' );
-		$this->container->bind( $name_service = 'service', function ( $c ) use ( $name_title ) {
+	public function test_get__callback_pass_params() {
+		$this->container->bind( 'id', $value1 = 100 );
+		$this->container->bind( 'title', $value2 = 'Title of article' );
+		$this->container->bind( $service = 'service', function ( $c ) {
 			$obj        = new stdClass();
-			$obj->title = $c->get( $name_title );
+			$obj->id = $c->get( 'id' );
+			$obj->title = $c->get( 'title' );
 
 			return $obj;
 		} );
 
-		$obj        = new stdClass();
-		$obj->title = $value_title;
-
-		self::assertEquals( $obj, $this->container->get( $name_service ) );
+		$expected = new stdClass();
+		$expected->id = $value1;
+		$expected->title = $value2;
+		self::assertEquals( $expected, $this->container->get( $service ) );
 	}
 
 	public function test_get__object_from_class() {
@@ -97,7 +97,15 @@ final class ServiceContainerTest extends TestCase {
 		self::assertEquals( $obj3, $this->container->get( $name ) );
 	}
 
-	public function test_get__autowiring_not_found_exception() {
+	public function test_get__autowiring_invocable() {
+		$this->container->bind( SimpleClass::class, SimpleClass::class );
+		$this->container->bind( $name = ClassInvocable::class, ClassInvocable::class );
+
+		self::assertInstanceOf( $name, $this->container->get( $name ) );
+		self::assertSame( 'Function is called from ClassInvocable', $this->container->get( $name )() );
+	}
+
+	public function test_get__autowiring_container_not_found_exception() {
 		self::expectException( ServiceContainerNotFoundException::class );
 
 		$this->container->get( 'not-exist-service' );
@@ -111,16 +119,16 @@ final class ServiceContainerTest extends TestCase {
 		$this->container->get( ClassWithConstructorDepsException::class );
 	}
 
-	// TODO:: do we need it?
-//	public function test_get__static_method_from_array() {
-//		$this->container->bind( $name = 'service', [ StaticClass::class, 'get_string' ] );
-//		self::assertSame( StaticClass::get_string(), $this->container->get( $name ) );
-//	}
-
 	public function test_has() {
 		$this->container->bind( $name = 'service', new stdClass() );
 
 		self::assertTrue( $this->container->has( $name ) );
 		self::assertFalse( $this->container->has( 'not-exist' ) );
 	}
+
+// TODO:: do we need it?
+//	public function test_get__static_method_from_array() {
+//		$this->container->bind( $name = 'service', [ StaticClass::class, 'get_string' ] );
+//		self::assertSame( StaticClass::get_string(), $this->container->get( $name ) );
+//	}
 }
