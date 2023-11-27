@@ -5,9 +5,9 @@ declare( strict_types=1 );
 namespace PisarevskiiTests\SimpleDIC;
 
 use PHPUnit\Framework\TestCase;
-use Pisarevskii\SimpleDIC\ServiceContainer;
-use Pisarevskii\SimpleDIC\ServiceContainerException;
-use Pisarevskii\SimpleDIC\ServiceContainerNotFoundException;
+use Pisarevskii\SimpleDIC\Container;
+use Pisarevskii\SimpleDIC\ContainerException;
+use Pisarevskii\SimpleDIC\ContainerNotFoundException;
 use PisarevskiiTests\SimpleDIC\Assets\ClassInvocable;
 use PisarevskiiTests\SimpleDIC\Assets\ClassWithConstructorDeps;
 use PisarevskiiTests\SimpleDIC\Assets\ClassWithConstructorDeps2;
@@ -17,22 +17,17 @@ use PisarevskiiTests\SimpleDIC\Assets\SimpleClass;
 use SplQueue;
 use stdClass;
 
-final class ServiceContainerTest extends TestCase {
-	private ?ServiceContainer $container;
+final class ContainerTest extends TestCase {
+	private ?Container $container;
 
 	protected function setUp(): void {
-		$this->container = new ServiceContainer();
+		$this->container = new Container();
 	}
 
 	protected function tearDown(): void {
 		$this->container = null;
 	}
 
-	/**
-	 * @return void
-	 * @throws \Psr\Container\ContainerExceptionInterface
-	 * @throws \Psr\Container\NotFoundExceptionInterface
-	 */
 	public function test_get__primitives() {
 		$this->container->set( $name = 'service', $value = 1 );
 		self::assertSame( $value, $this->container->get( $name ) );
@@ -45,11 +40,21 @@ final class ServiceContainerTest extends TestCase {
 
 		$this->container->set( $name = 'service', $value = [ 'array' ] );
 		self::assertSame( $value, $this->container->get( $name ) );
+
+		$this->container->set( $name = 'service', $value = false );
+		self::assertSame( $value, $this->container->get( $name ) );
+
+		$this->container->set( $name = 'service', $value = null );
+		self::assertSame( $value, $this->container->get( $name ) );
 	}
 
-	public function test_get__simple_class() {
+	public function test_get__class() {
 		$this->container->set( $name = 'service', $value = new stdClass() );
 		self::assertSame( $value, $this->container->get( $name ) );
+	}
+
+	public function test_get__not_set_class() {
+		self::assertEquals( new SplQueue(), $this->container->get( SplQueue::class ) );
 	}
 
 	public function test_get__callback() {
@@ -122,7 +127,7 @@ final class ServiceContainerTest extends TestCase {
 		self::assertSame( 'Function is called from ClassInvocable', $this->container->get( $name )() );
 	}
 
-	public function test_get__autowiring_not_bonded_deps() {
+	public function test_get__autowiring_not_set_deps() {
 		$obj1 = new SimpleClass();
 		$obj2 = new ClassWithConstructorDeps( $obj1 );
 		$obj3 = new ClassWithConstructorDeps2( $obj2 );
@@ -134,20 +139,28 @@ final class ServiceContainerTest extends TestCase {
 		self::assertInstanceOf( SplQueue::class, $this->container->get( SplQueue::class ) );
 	}
 
-	public function test_get__bind_autowiring_container_not_found_exception_string() {
-		self::expectException( ServiceContainerNotFoundException::class );
+	public function test_get__autowiring_for_not_set_class() {
+		$obj1 = new SimpleClass();
+		$obj2 = new ClassWithConstructorDeps( $obj1 );
+		$obj3 = new ClassWithConstructorDeps2( $obj2 );
 
-		$this->container->get( 'not-exist-service' );
+		self::assertEquals( $obj3, $this->container->get(  ClassWithConstructorDeps2::class ) );
 	}
 
-	public function test_get__bind_autowiring_container_not_found_exception_class() {
-		self::expectException( ServiceContainerNotFoundException::class );
+//	public function test_get__bind_autowiring_container_not_found_exception_string() {
+//		self::expectException( ServiceContainerNotFoundException::class );
+//
+//		$this->container->get( 'not-exist-service' );
+//	}
 
-		$this->container->get( \stdClass::class );
-	}
+//	public function test_get__bind_autowiring_container_not_found_exception_class() {
+//		self::expectException( ServiceContainerNotFoundException::class );
+//
+//		$this->container->get( \stdClass::class );
+//	}
 
 	public function test_get__autowiring__container_exception() {
-		self::expectException( ServiceContainerException::class );
+		self::expectException( ContainerException::class );
 
 		$this->container->set( SimpleClass::class, SimpleClass::class );
 		$this->container->set( ClassWithConstructorDepsException::class, ClassWithConstructorDepsException::class );

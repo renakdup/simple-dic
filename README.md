@@ -9,17 +9,17 @@ Simple DI Container with auto-wiring in a single file allows you to easily use i
 5. PSR11 support can be activated (read more about below).
 
 ## How to integrate it in a project?
-1. Just copy the file `./src/ServiceContainer.php` to your plugin directory or theme.
+1. Just copy the file `./src/Container.php` to your plugin directory or theme.
 2. Rename `namespace` in the file from `Pisarevskii\SimpleDIC` to `<Your_Plugin_Name>\SimpleDIC`
 3. Require this file.
 
 ## How to use it in code
 Simple example:
 ```
-use Pisarevskii\SimpleDIC\ServiceContainer;
+use Pisarevskii\SimpleDIC\Container;
 
 // create the container
-$container = new ServiceContainer();
+$container = new Container();
 
 // set service
 $container->set(Paypal::class, function () {
@@ -40,7 +40,7 @@ $container->set('config', [
     'environment' => 'production',
 ]);
 
-$container->set(Paypal::class, function (ServiceContainer $c) {
+$container->set(Paypal::class, function (Container $c) {
     return new Paypal($c->get('config'));
 } );
 ```
@@ -48,13 +48,13 @@ $container->set(Paypal::class, function (ServiceContainer $c) {
 
 ## PSR11 Compatibility
 This Simple DI Container compatible with PSR11 standards ver 2.0, to use it:
-1. Just import PSR11 interfaces in `ServiceContainer.php`
+1. Just import PSR11 interfaces in `Container.php`
 ```
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 ```
-2. Remove PSR11 interfaces from the `ServiceContainer.php` file:
+2. Remove PSR11 interfaces from the `Container.php` file:
 ```
 ######## PSR11 2.0 interfaces #########
 
@@ -79,14 +79,17 @@ $container->set('config.', ['one', 'two, 'three']);
 - [x] Add auto-wiring for registered classes in DIC
 - [x] Add auto-wiring for defaults primitives for auto-fillings
 - [x] Add supporting invocable class
-- [x] Add PSR11 interfaces in the ServiceContainer.php.
+- [x] Add PSR11 interfaces in the Container.php.
 - [x] Add auto-wiring support for not bounded classes.
-- [ ] Add singleton setter and getter
-- [ ] Add singleton getting for ServiceContainer
+- [ ] Add resolved service storage.
+- [ ] Think about this exception ContainerNotFoundException
+- [ ] Add ability creating new instance of service every time
+- [ ] Add supporting Code Driven IoC
+- [ ] Add singleton getting for Container
 - [ ] Integrate CI
 - [ ] Add badges with tests passed
 - [ ] PHP 8 named arguments and autowiring
 - [ ] Save cache in opcache?
-- [ ] Add configurations of ServiceContainer.
+- [ ] Add configurations of Container.
 - [ ] Choose codestyle
 - [ ] Add on packegist

@@ -68,30 +68,38 @@ interface NotFoundExceptionInterface extends ContainerExceptionInterface {}
 ###############################
 #     Simple DIC code
 ###############################
-class ServiceContainer implements ContainerInterface {
-	private array $services = [];
+class Container implements ContainerInterface {
+	protected array $services = [];
+
+//	protected array $resolved_services = [];
 
 	public function set( string $id, $service ): void {
 		$this->services[ $id ] = $service;
+//		unset( $this->resolved_services[ $id ] );
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
 	public function get( string $id ) {
-		if ( ! $this->has( $id ) ) {
-			throw new ServiceContainerNotFoundException( "Service '{$id}' not found in the ServiceContainer." );
-		}
+//		if ( isset( $this->resolved_services[ $id ] ) || array_key_exists( $id, $this->resolved_services ) ) {
+//			return $this->resolved_services[ $id ];
+//		}
 
-		return $this->resolve_service( $this->services[ $id ] );
+
+		$resolved_service = $this->resolve_service( $this->has( $id ) ? $this->services[ $id ] : $id );
+
+//		$this->resolved_services[ $id ] = $resolved_service;
+
+		return $resolved_service;
 	}
 
 	private function resolve_service( $service ) {
 		if ( $service instanceof Closure ) {
 			return $service( $this );
-		}
-
-		if ( is_string( $service ) && class_exists( $service ) ) {
+		} elseif ( is_object( $service ) ) {
+			return $service;
+		} elseif ( is_string( $service ) && class_exists( $service ) ) {
 			$reflected_class = new ReflectionClass( $service );
 			$constructor     = $reflected_class->getConstructor();
 
@@ -120,30 +128,32 @@ class ServiceContainer implements ContainerInterface {
 				try {
 					$default_value = $param->getDefaultValue();
 					if ( ! $default_value && $default_value !== null ) {
-						throw new ServiceContainerException( 'Service "' . $reflected_class->getName() . '" could not be resolved due constructor parameter "' . $param->getName() . '"' );
+						throw new ContainerException( 'Service "' . $reflected_class->getName() . '" could not be resolved due constructor parameter "' . $param->getName() . '"' );
 					}
 				} catch ( \ReflectionException $e ) {
-					throw new ServiceContainerException( 'Service "' . $reflected_class->getName() . '" could not be resolved because parameter of constructor "' . $param . '" has the Reflection issue while resolving: ' . $e->getMessage() );
+					throw new ContainerException( 'Service "' . $reflected_class->getName() . '" could not be resolved because parameter of constructor "' . $param . '" has the Reflection issue while resolving: ' . $e->getMessage() );
 				}
 
 				$constructor_args[] = $default_value;
 			}
 
 			return new $service( ...$constructor_args );
+		} elseif ( is_scalar( $service ) || is_array( $service ) || $service === null ) {
+			return $service;
 		}
 
-		return $service;
+		throw new ContainerNotFoundException( "Service '{$service}' not found in the ServiceContainer." );
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function has( string $id ): bool {
-		return isset( $this->services[ $id ] );
+		return isset( $this->services[ $id ] ) || array_key_exists( $id, $this->services );
 	}
 }
 
-class ServiceContainerNotFoundException extends InvalidArgumentException implements NotFoundExceptionInterface {}
+class ContainerNotFoundException extends InvalidArgumentException implements NotFoundExceptionInterface {}
 
-class ServiceContainerException extends InvalidArgumentException implements ContainerExceptionInterface {}
+class ContainerException extends InvalidArgumentException implements ContainerExceptionInterface {}
 
