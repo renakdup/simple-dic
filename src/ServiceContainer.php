@@ -71,7 +71,7 @@ interface NotFoundExceptionInterface extends ContainerExceptionInterface {}
 class ServiceContainer implements ContainerInterface {
 	protected array $services = [];
 
-	public function bind( string $id, $service ): void {
+	public function set( string $id, $service ): void {
 		$this->services[ $id ] = $service;
 	}
 
