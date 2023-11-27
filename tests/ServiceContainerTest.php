@@ -86,11 +86,11 @@ final class ServiceContainerTest extends TestCase {
 
 //	//TODO:: need to add supporting
 //	public function test_get__singleton() {
-//		$this->container->set( $name = 'service', static function () {
+//		$this->container->set( $name = 'service', function () {
 //			$obj = new stdClass();
 //			$obj->title = 'first title';
 //			return $obj;
-//		} );
+//		}, true );
 //		self::assertObjectHasProperty( 'title', $this->container->get( $name ) );
 //		self::assertSame( 'first title', $this->container->get( $name )->title );
 //

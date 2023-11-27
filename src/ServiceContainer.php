@@ -17,10 +17,10 @@ use Closure;
 use InvalidArgumentException;
 use ReflectionClass;
 
-######## PSR7 2.0 interfaces #########
-# If you want to support PSR 7, then remove 3 interfaces below
+######## PSR11 2.0 interfaces #########
+# If you want to support PSR11, then remove 3 interfaces below
 # (ContainerInterface, ContainerExceptionInterface, NotFoundExceptionInterface)
-# and import PSR7 interfaces in this file:
+# and import PSR11 interfaces in this file:
 # -----
 # use Psr\Container\ContainerExceptionInterface;
 # use Psr\Container\ContainerInterface;
@@ -62,14 +62,14 @@ interface ContainerExceptionInterface extends \Throwable {}
  * No entry was found in the container.
  */
 interface NotFoundExceptionInterface extends ContainerExceptionInterface {}
-######## PSR7 interfaces - END #########
+######## PSR11 interfaces - END #########
 
 
 ###############################
 #     Simple DIC code
 ###############################
 class ServiceContainer implements ContainerInterface {
-	protected array $services = [];
+	private array $services = [];
 
 	public function set( string $id, $service ): void {
 		$this->services[ $id ] = $service;

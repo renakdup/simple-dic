@@ -6,7 +6,7 @@ Simple DI Container with auto-wiring in a single file allows you to easily use i
 2. Simple DI Container hasn't any dependencies on other scripts or libraries.
 3. Supports auto-wiring `__constructor` parameters for classes as well as for scalar types that have default values.
 4. Allow you following the best practices for developing your code.
-5. PSR7 support can be activated (read more about below).
+5. PSR11 support can be activated (read more about below).
 
 ## How to integrate it in a project?
 1. Just copy the file `./src/ServiceContainer.php` to your plugin directory or theme.
@@ -46,26 +46,26 @@ $container->set(Paypal::class, function (ServiceContainer $c) {
 ```
 
 
-## PSR7 Compatibility
-This Simple DI Container compatible with PSR7 standards ver 2.0, to use it:
-1. Just import PSR7 interfaces in `ServiceContainer.php`
+## PSR11 Compatibility
+This Simple DI Container compatible with PSR11 standards ver 2.0, to use it:
+1. Just import PSR11 interfaces in `ServiceContainer.php`
 ```
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 ```
-2. Remove PSR7 interfaces from the `ServiceContainer.php` file:
+2. Remove PSR11 interfaces from the `ServiceContainer.php` file:
 ```
-######## PSR7 2.0 interfaces #########
+######## PSR11 2.0 interfaces #########
 
-..... PSR7 interfaces
+..... PSR11 interfaces
 
-######## PSR7 interfaces - END #########
+######## PSR11 interfaces - END #########
 ```
 
 > [!NOTE]
-> Some plugins use PSR 7 interfaces and these files are stored inside these plugins as well as PSR interfaces have versions and are usually not compatible between major versions.  
-> **Due that I highly recommend you keep these interfaces inside the file and use PSR7 interfaces under your Plugin/Theme namespace.**
+> Some plugins use PSR11 interfaces and these files are stored inside these plugins as well as PSR interfaces have versions and are usually not compatible between major versions.  
+> **Due that I highly recommend you keep these interfaces inside the file and use PSR11 interfaces under your Plugin/Theme namespace.**
 
 
 ## More examples
@@ -79,7 +79,7 @@ $container->set('config.', ['one', 'two, 'three']);
 - [x] Add auto-wiring for registered classes in DIC
 - [x] Add auto-wiring for defaults primitives for auto-fillings
 - [x] Add supporting invocable class
-- [x] Add PSR7 interfaces in the ServiceContainer.php.
+- [x] Add PSR11 interfaces in the ServiceContainer.php.
 - [x] Add auto-wiring support for not bounded classes.
 - [ ] Add singleton setter and getter
 - [ ] Add singleton getting for ServiceContainer
