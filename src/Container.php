@@ -3,11 +3,11 @@
  * Simple PHP DI Container (DIC) for WordPress with auto-wiring allows
  * you easily use it in your plugins and themes.
  *
- * @version 0.2
  * Author: Andrei Pisarevskii
  * Author Email: renakdup@gmail.com
  * Author Site: https://wp-yoda.com/en/
  *
+ * Version: 0.2
  * Source Code: https://github.com/renakdup/simple-wordpress-dic
  *
  * Licence: MIT License
@@ -75,25 +75,15 @@ interface NotFoundExceptionInterface extends ContainerExceptionInterface {}
 class Container implements ContainerInterface {
 	protected array $services = [];
 
-//	protected array $resolved_services = [];
-
 	public function set( string $id, $service ): void {
 		$this->services[ $id ] = $service;
-//		unset( $this->resolved_services[ $id ] );
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
 	public function get( string $id ) {
-//		if ( isset( $this->resolved_services[ $id ] ) || array_key_exists( $id, $this->resolved_services ) ) {
-//			return $this->resolved_services[ $id ];
-//		}
-
-
 		$resolved_service = $this->resolve_service( $this->has( $id ) ? $this->services[ $id ] : $id );
-
-//		$this->resolved_services[ $id ] = $resolved_service;
 
 		return $resolved_service;
 	}

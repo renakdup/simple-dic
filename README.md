@@ -169,6 +169,8 @@ $container->set('config.', ['one', 'two, 'three']);
 - [ ] Add ability creating new instance of service every time
 - [ ] Add supporting Code Driven IoC
 - [ ] Add singleton getting for Container
+- [ ] Add descriptions in the code for functions.
+- [ ] Set definitions via constuctor
 - [ ] Add `remove` method? 
 - [ ] Integrate CI
 - [ ] Add badges with tests passed
