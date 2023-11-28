@@ -164,7 +164,7 @@ $container->set('config.', ['one', 'two, 'three']);
 - [x] Add supporting invocable class
 - [x] Add PSR11 interfaces in the Container.php.
 - [x] Add auto-wiring support for not bounded classes.
-- [ ] Add resolved service storage.
+- [x] Add resolved service storage.
 - [ ] Think about this exception ContainerNotFoundException
 - [ ] Add ability creating new instance of service every time
 - [ ] Add supporting Code Driven IoC
