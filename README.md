@@ -1,4 +1,8 @@
 # Simple DI Container for WordPress
+[![Unit Tests](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/ci-workflow.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/ci-workflow.yaml)
+
+
+
 Simple DI Container with auto-wiring in a single file allows you to easily use it in your WordPress plugins and themes. 
 
 ## Why choose Simple DI Container?
@@ -61,20 +65,13 @@ $container->set( Paypal::class, function () {
 
 One of the main benefits as well is that the factory allows to creation of objects by Lazy Load. It means that object to be created just when you call `$constructor->get( Paypal::class )`.
 
-[//]: # (> [!NOTE]  )
-
-[//]: # (> If you get the same service from the Container several times, you will get the same object, because the object is created just 1 time, and then stored in storage.)
-
-[//]: # (> ```php)
-
-[//]: # (> $obj1 = $constructor->get&#40; Paypal::class &#41;;)
-
-[//]: # (> $obj2 = $constructor->get&#40; Paypal::class &#41;;)
-
-[//]: # (> var_dump&#40; $obj1 === $obj2 &#41; // true)
-
-[//]: # (> ```)
-
+> [!NOTE]  
+> If you get the same service from the Container several times, you will get the same object, because the object is created just 1 time, and then stored in storage.
+> ```php
+> $obj1 = $constructor->get( Paypal::class );
+> $obj2 = $constructor->get( Paypal::class );
+> var_dump( $obj1 === $obj2 ) // true
+> ```
 
 ---
 
@@ -164,17 +161,19 @@ $container->set('config.', ['one', 'two, 'three']);
 - [x] Add supporting invocable class
 - [x] Add PSR11 interfaces in the Container.php.
 - [x] Add auto-wiring support for not bounded classes.
-- [x] Add resolved service storage.
-- [ ] Integrate CI with running autotests
+- [x] Add resolved service storage (getting singleton).
 - [ ] Add ability creating new instance of service every time
+- [ ] Set definitions via `__constructor`
 - [ ] Add supporting Code Driven IoC
-- [ ] Add singleton getting for Container
-- [ ] Add descriptions in the code for functions.
-- [ ] Set definitions via constuctor
-- [ ] Add `remove` method? 
-- [ ] Add badges with tests passed
-- [ ] PHP 8 named arguments and autowiring
-- [ ] Save cache in opcache?
 - [ ] Add configurations of Container.
+- [ ] Add `remove` method
+- [ ] Save cache in opcache
+- [ ] PHP 8 named arguments and autowiring
+
+## Nice to have
+- [x] Integrate CI with running autotests
+- [x] Add badges with tests passed
+- [ ] Add code coverage badge
+- [ ] Add descriptions in the code for functions.
 - [ ] Choose codestyle
 - [ ] Add on packegist
