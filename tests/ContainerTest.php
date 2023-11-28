@@ -171,16 +171,16 @@ final class ContainerTest extends TestCase {
 		self::assertEquals( $obj3, $this->container->get(  ClassWithConstructor::class ) );
 	}
 
-//	public function test_get__bind_autowiring_container_not_found_exception_string() {
-//		self::expectException( ServiceContainerNotFoundException::class );
-//
-//		$this->container->get( 'not-exist-service' );
-//	}
+	public function test_get__exception_not_found() {
+		self::expectException( ContainerNotFoundException::class );
+
+		$this->container->get( 'not-exist-service' );
+	}
 
 //	public function test_get__bind_autowiring_container_not_found_exception_class() {
-//		self::expectException( ServiceContainerNotFoundException::class );
+//		self::expectException( ContainerNotFoundException::class );
 //
-//		$this->container->get( \stdClass::class );
+//		$this->container->get( SimpleClass::class );
 //	}
 
 	public function test_get__autowiring__container_exception() {
