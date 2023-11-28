@@ -1,4 +1,4 @@
-name: Main CI flow
+name: Unit Tests
 
 env:
   PHP_VER: "7.4"
