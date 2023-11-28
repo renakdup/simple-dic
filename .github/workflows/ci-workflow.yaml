@@ -1,0 +1,37 @@
+name: Main CI flow
+
+env:
+  PHP_VER: "7.4"
+  COMPOSER_VER: "2.1"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    types: [ synchronize, opened, reopened ]
+
+jobs:
+  php-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP with Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VER }}
+          tools: composer:v${{ env.COMPOSER_VER }}
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: /tmp/composer-cache
+          key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+
+      - name: Run Composer
+        run: |
+          export COMPOSER_CACHE_DIR=/tmp/composer-cache # change cache directory to be able to use cache of php-actions/composer@v6 jobs
+          composer install
+
+      - name: Run PHPUnit
+        run: composer run phpunit
