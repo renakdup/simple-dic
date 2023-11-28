@@ -14,7 +14,13 @@ Simple DI Container with auto-wiring in a single file allows you to easily use i
 3. Require this file.
 
 ## How to use it in code
-Simple example:
+
+### Get started:
+
+1. Create a container
+2. Set a service
+3. Get a service
+4. Use object
 ```php
 use Pisarevskii\SimpleDIC\Container;
 
@@ -33,9 +39,46 @@ $paypal = $container->get( Paypal::class );
 $paypal->pay();
 ```
 
+SimpleDIC allows to set values for the container for primitive types:
+```php
+$container->set( 'requests_limit', 100 );
+$container->set( 'post_type', 'products' );
+$container->set( 'users_ids', [ 1, 2, 3, 4] );
+
+$user_ids = $container->get( 'users_ids', [ 1, 2, 3, 4] );
+```
 ---
 
-You can use `Container` instance inside a factory (anonymous function) to get resolved services:
+### Factory
+Factory is an `anonymous function` that wrap creating an instance.  
+Allows to configure how an object will be created and allows to use `Conainer` instance inside the factory.
+
+```php
+$container->set( Paypal::class, function () {
+    return new Paypal();
+} );
+```
+
+One of the main benefits as well is that the factory allows to creation of objects by Lazy Load. It means that object to be created just when you call `$constructor->get( Paypal::class )`.
+
+[//]: # (> [!NOTE]  )
+
+[//]: # (> If you get the same service from the Container several times, you will get the same object, because the object is created just 1 time, and then stored in storage.)
+
+[//]: # (> ```php)
+
+[//]: # (> $obj1 = $constructor->get&#40; Paypal::class &#41;;)
+
+[//]: # (> $obj2 = $constructor->get&#40; Paypal::class &#41;;)
+
+[//]: # (> var_dump&#40; $obj1 === $obj2 &#41; // true)
+
+[//]: # (> ```)
+
+
+---
+
+**SimpleDIC** allows to get a `Container` instance inside a factory if you add parameter in a callback `( Container $c )`. This allows to get or resolve another services inside for building an object:
 ```php
 $container->set( 'config', [
     'currency' => '$',
@@ -47,14 +90,10 @@ $container->set( Paypal::class, function ( Container $c ) {
 } );
 ```
 
-> [!NOTE]
-> But if class instantiating is more complex and requires configuring and you don't have parameters with default values in the constructor then you need to use factory for preparing service.  
-> **See Factory chapter.**
-
 ---
 
 ### Autowiring
-Autowiring is feature that **allows to container automatically create and inject dependencies**.
+**SimpleDIС** autowiring feature **allows to `Container` automatically create and inject dependencies**.
 
 I'll show an example:
 ```php
@@ -67,12 +106,12 @@ class Paypal {
     }
 }
 ```
-And when you create `Paypal::class`, you run `$container->get(Paypal::class)`, and `Container` identifies all classes in the constructor and resolves them. As if it's:
+And then when you create `Paypal::class`, you run `$container->get(Paypal::class)`, and `Container` identifies all classes in the constructor and resolves them. As if it's:
 ```php
 new Paypal( new PayPalSDK(), new Logger() );
 ```
-
-Container autowiring can resolve primitive parameters in a constructor in case they have default values.
+---
+Container autowiring can resolve default values for *primitive* parameters in a constructor:
 ```php
 class Logger {
     public function __constructor( $type = 'filestorage', $error_lvl = 1 ) {
@@ -82,6 +121,10 @@ class Logger {
 ```
 
 You can use **auto-wiring** feature that allows to `Container` create an instances that requires in the `__constructor` of class as well as it resolves constructor dependencies for 
+
+
+> [!NOTE]
+> But if object creating is more complex and requires configuring and you don't have parameters with default values in the constructor then you need to use `factory` for preparing service.
 
 ---
 

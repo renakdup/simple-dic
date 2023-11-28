@@ -3,9 +3,13 @@
  * Simple PHP DI Container (DIC) for WordPress with auto-wiring allows
  * you easily use it in your plugins and themes.
  *
+ * @version 0.2
  * Author: Andrei Pisarevskii
  * Author Email: renakdup@gmail.com
- * Source code: https://github.com/renakdup/simple-wordpress-dic
+ * Author Site: https://wp-yoda.com/en/
+ *
+ * Source Code: https://github.com/renakdup/simple-wordpress-dic
+ *
  * Licence: MIT License
  */
 
