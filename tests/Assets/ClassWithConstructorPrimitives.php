@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace PisarevskiiTests\SimpleDIC\Assets;
 
-class ClassWithConstructorDeps {
+class ClassWithConstructorPrimitives {
 
-	private SimpleClass $simple_class;
+	public SimpleClass $simple_class;
 
-	private array $array;
-	private string $string;
-	private int $number;
+	public array $array;
+	public string $string;
+	public int $number;
 
 	/**
 	 * @var null
 	 */
-	private $null;
+	public $null;
 
 	public function __construct(
 		SimpleClass $simple_class,

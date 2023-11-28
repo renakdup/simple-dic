@@ -75,20 +75,29 @@ interface NotFoundExceptionInterface extends ContainerExceptionInterface {}
 class Container implements ContainerInterface {
 	protected array $services = [];
 
+	protected array $resolved_services = [];
+
 	public function set( string $id, $service ): void {
 		$this->services[ $id ] = $service;
+		unset( $this->resolved_services[ $id ] );
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
 	public function get( string $id ) {
+		if ( isset( $this->resolved_services[ $id ] ) || array_key_exists( $id, $this->resolved_services ) ) {
+			return $this->resolved_services[ $id ];
+		}
+
 		$resolved_service = $this->resolve_service( $this->has( $id ) ? $this->services[ $id ] : $id );
+
+		$this->resolved_services[ $id ] = $resolved_service;
 
 		return $resolved_service;
 	}
 
-	private function resolve_service( $service ) {
+	protected function resolve_service( $service ) {
 		if ( $service instanceof Closure ) {
 			return $service( $this );
 		} elseif ( is_object( $service ) ) {
@@ -115,7 +124,7 @@ class Container implements ContainerInterface {
 						continue;
 					}
 
-					$constructor_args[] = $this->resolve_service( $param_class->getName() );
+					$constructor_args[] = $this->get( $param_class->getName() );
 					continue;
 				}
 
@@ -143,7 +152,7 @@ class Container implements ContainerInterface {
 	 * @inheritdoc
 	 */
 	public function has( string $id ): bool {
-		return isset( $this->services[ $id ] ) || array_key_exists( $id, $this->services );
+		return array_key_exists( $id, $this->services );
 	}
 }
 

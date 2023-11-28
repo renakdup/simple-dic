@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace PisarevskiiTests\SimpleDIC\Assets;
 
-class ClassInvocable {
+class InvocableClass {
 
-	private SimpleClass $simple_class;
+	public SimpleClass $simple_class;
 
 	public function __construct(SimpleClass $simple_class) {
 		$this->simple_class = $simple_class;
