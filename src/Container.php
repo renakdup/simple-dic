@@ -37,8 +37,8 @@ interface ContainerInterface {
 	 * @param string $id Identifier of the entry to look for.
 	 *
 	 * @return mixed Entry.
-	 * @throws ContainerExceptionInterface Error while retrieving the entry.
 	 *
+	 * @throws ContainerExceptionInterface Error while retrieving the entry.
 	 * @throws NotFoundExceptionInterface  No entry was found for **this** identifier.
 	 */
 	public function get( string $id );
@@ -73,10 +73,19 @@ interface NotFoundExceptionInterface extends ContainerExceptionInterface {}
 #     Simple DIC code
 ###############################
 class Container implements ContainerInterface {
+	/**
+	 * @var mixed[]
+	 */
 	protected array $services = [];
 
+	/**
+	 * @var mixed[]
+	 */
 	protected array $resolved = [];
 
+	/**
+	 * @param mixed $service
+	 */
 	public function set( string $id, $service ): void {
 		$this->services[ $id ] = $service;
 		unset( $this->resolved[ $id ] );
@@ -97,7 +106,10 @@ class Container implements ContainerInterface {
 		return $service;
 	}
 
-	protected function resolve( $id ) {
+	/**
+	 * @return mixed
+	 */
+	protected function resolve( string $id ) {
 		if ( $this->has( $id ) ) {
 			$service = $this->services[ $id ];
 
@@ -121,7 +133,7 @@ class Container implements ContainerInterface {
 		}
 	}
 
-	protected function resolve_object( $service ) {
+	protected function resolve_object( string $service ): object {
 		$reflected_class = new ReflectionClass( $service );
 		$constructor     = $reflected_class->getConstructor();
 

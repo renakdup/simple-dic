@@ -1,0 +1,19 @@
+parameters:
+	level: 6
+	phpVersion: 70400 # PHP 7.4
+	parallel:
+		jobSize: 20
+		maximumNumberOfProcesses: 2
+		minimumNumberOfJobsPerProcess: 1
+	tmpDir: ./tmp/pstan-cache/
+
+	bootstrapFiles:
+		- ./vendor/autoload.php
+		#- ./dev/phpstan/bootstrap.php
+	scanDirectories:
+		- ./src
+	paths:
+		- ./src
+
+	ignoreErrors:
+

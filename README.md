@@ -167,6 +167,7 @@ use Psr\Container\NotFoundExceptionInterface;
 ## Nice to have
 - [x] Integrate CI with running autotests
 - [x] Add badges with tests passed
+- [x] Add PHPStan analyzer
 - [ ] Add code coverage badge
 - [ ] Add descriptions in the code for functions.
 - [ ] Choose codestyle

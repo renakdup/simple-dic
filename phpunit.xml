@@ -3,6 +3,7 @@
          bootstrap="vendor/autoload.php"
          beStrictAboutTestsThatDoNotTestAnything="true"
          colors="true"
+         cacheResultFile="./tmp/.phpunit.result.cache"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd
         ">
     <coverage includeUncoveredFiles="true">
