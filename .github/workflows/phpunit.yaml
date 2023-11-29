@@ -37,7 +37,6 @@ jobs:
       - name: Install Composer packages
         run: |
           composer install
-          cd ./wp-content/plugins/core/ && composer install
 
       - name: Run PHPUnit
         run: composer run phpunit
