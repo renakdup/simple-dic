@@ -63,7 +63,7 @@ $container->set( Paypal::class, function () {
 } );
 ```
 
-One of the main benefits as well is that the factory allows to creation of objects by Lazy Load. It means that object to be created just when you call `$constructor->get( Paypal::class )`.
+One of the main benefits as well is that the factory allows to create objects in Lazy Load mode. It means that object will be created just when you resolve it `$constructor->get( Paypal::class )`.
 
 > [!NOTE]  
 > If you get the same service from the Container several times, you will get the same object, because the object is created just 1 time, and then stored in storage.
@@ -147,28 +147,22 @@ use Psr\Container\NotFoundExceptionInterface;
 > Some plugins use PSR11 interfaces and these files are stored inside these plugins as well as PSR interfaces have versions and are usually not compatible between major versions.  
 > **Due that I highly recommend you keep these interfaces inside the file and use PSR11 interfaces under your Plugin/Theme namespace.**
 
-
-## More examples
-```php
-$container->set('config.requests-limit', 100);
-$container->set('config.', ['one', 'two, 'three']);
-```
-
 ## Roadmap
 - [x] Add binding services with configuration
 - [x] Add auto-wiring for registered classes in DIC
 - [x] Add auto-wiring for defaults primitives for auto-fillings
-- [x] Add supporting invocable class
+- [x] Add supporting invocable classes
 - [x] Add PSR11 interfaces in the Container.php.
 - [x] Add auto-wiring support for not bounded classes.
 - [x] Add resolved service storage (getting singleton).
-- [ ] Add ability creating new instance of service every time
-- [ ] Set definitions via `__constructor`
-- [ ] Add supporting Code Driven IoC
+- [ ] Add ability to create new instances of service every time.
+- [ ] Allow to set definitions via `__constructor`.
+- [ ] Bind $container instance by default.
+- [ ] Add supporting Code Driven IoC.
 - [ ] Add configurations of Container.
-- [ ] Add `remove` method
-- [ ] Save cache in opcache
-- [ ] PHP 8 named arguments and autowiring
+- [ ] Add `remove` method.
+- [ ] Save cache in opcache.
+- [ ] PHP 8 named arguments and autowiring.
 
 ## Nice to have
 - [x] Integrate CI with running autotests
