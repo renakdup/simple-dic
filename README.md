@@ -1,5 +1,6 @@
 # Simple DI Container for WordPress
-[![Unit Tests](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/ci-workflow.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/ci-workflow.yaml)
+[![UnitTests](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpunit.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpunit.yaml)
+[![PHPStan](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpstan.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpstan.yaml)
 
 
 
