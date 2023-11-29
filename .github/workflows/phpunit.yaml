@@ -1,0 +1,43 @@
+name: UnitTests
+
+env:
+  PHP_VER: "7.4"
+  COMPOSER_VER: "2.1"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    types: [ synchronize, opened, reopened ]
+
+jobs:
+  php-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP with Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VER }}
+          tools: composer:v${{ env.COMPOSER_VER }}
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install Composer packages
+        run: |
+          composer install
+          cd ./wp-content/plugins/core/ && composer install
+
+      - name: Run PHPUnit
+        run: composer run phpunit
