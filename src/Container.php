@@ -117,13 +117,9 @@ class Container implements ContainerInterface {
 				return $service( $this );
 			} elseif ( is_string( $service ) && class_exists( $service ) ) {
 				return $this->resolve_object( $service );
-			} elseif ( is_scalar( $service ) || is_array( $service ) || $service === null ) {
-				return $service;
-			} elseif ( is_object( $service ) ) {
-				return $service;
 			}
 
-			throw new ContainerNotFoundException( "Service '{$service}' not found in the Container." );
+			return $service;
 		} else {
 			if ( is_string( $id ) && class_exists( $id ) ) {
 				return $this->resolve_object( $id );
@@ -133,6 +129,9 @@ class Container implements ContainerInterface {
 		}
 	}
 
+	/**
+	 * @param class-string $service
+	 */
 	protected function resolve_object( string $service ): object {
 		$reflected_class = new ReflectionClass( $service );
 		$constructor     = $reflected_class->getConstructor();
