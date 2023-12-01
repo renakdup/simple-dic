@@ -149,11 +149,6 @@ class Container implements ContainerInterface {
 		$constructor_args = [];
 		foreach ( $params as $param ) {
 			if ( $param_class = $param->getClass() ) {
-				if ( $this->has( $param_class->getName() ) ) {
-					$constructor_args[] = $this->get( $param_class->getName() );
-					continue;
-				}
-
 				$constructor_args[] = $this->get( $param_class->getName() );
 				continue;
 			}
