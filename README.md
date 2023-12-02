@@ -7,11 +7,12 @@
 Simple DI Container with autowiring in a single file allows you to easily use it in your simple PHP applications and especially convenient for WordPress plugins and themes. 
 
 ## Why choose Simple DI Container?
-1. Easy to integrate into your PHP Applocation or WordPress project, just copy one file.
+1. Easy to integrate into your PHP Application or WordPress project, just copy one file.
 2. Simple PHP DI Container hasn't any dependencies on other scripts or libraries.
 3. Supports auto-wiring `__constructor` parameters for classes as well as for scalar types that have default values.
-4. Allow you following the best practices for developing your code.
-5. Supports PSR11 (read more about below).
+4. Supports Lazy Load class instantiating.
+5. Allow you following the best practices for developing your code.
+6. Supports PSR11 (read more about below).
 
 ## How to integrate it in a project?
 1. Just copy the file `./src/Container.php` to your plugin directory or theme.
@@ -52,6 +53,17 @@ $container->set( 'users_ids', [ 1, 2, 3, 4] );
 
 $user_ids = $container->get( 'users_ids', [ 1, 2, 3, 4] );
 ```
+
+Method `get()` can resolve not set object in the `$container` and then save resolved results in the `$container`. It means when you run `$container->get( $service )` several times you get the same object.
+
+```php
+$obj1 = $constructor->get( Paypal::class );
+$obj2 = $constructor->get( Paypal::class );
+var_dump( $obj1 === $obj2 ) // true
+```
+
+If you want to instantiate service several time use `make()` method. 
+
 ---
 
 ### Factory
@@ -64,18 +76,19 @@ $container->set( Paypal::class, function () {
 } );
 ```
 
-One of the main benefits as well is that the factory allows to create objects in Lazy Load mode. It means that object will be created just when you resolve it `$constructor->get( Paypal::class )`.
+As well factories create objects in the Lazy Load mode. It means that object will be created just when you resolve it by using `get()` method:
 
-> [!NOTE]  
-> If you get the same service from the Container several times, you will get the same object, because the object is created just 1 time, and then stored in storage.
-> ```php
-> $obj1 = $constructor->get( Paypal::class );
-> $obj2 = $constructor->get( Paypal::class );
-> var_dump( $obj1 === $obj2 ) // true
-> ```
+```php
+$container->set( Paypal::class, function () {
+    return new Paypal();
+} );
+
+$paypal = $constructor->get( Paypal::class ); // PayPal instance created
+```
 
 ---
 
+### Container inside factory
 **SimpleDIC** allows to get a `Container` instance inside a factory if you add parameter in a callback `( Container $c )`. This allows to get or resolve another services inside for building an object:
 ```php
 $container->set( 'config', [
@@ -127,6 +140,40 @@ You can use **auto-wiring** feature that allows to `Container` create an instanc
 ---
 
 
+### Create an instance every time
+
+Method `make()` resolves services by its name. It returns a new instance of service every time and supports auto-wiring.
+
+```php
+$conatainer->make( Paypal::class );
+```
+
+> [!NOTE]  
+> Constructor's dependencies will not instantiate every time.  
+> If dependencies were resolved before then they will be passed as resolved dependencies.
+
+Consider example:
+```php
+class PayPalSDK {}
+
+class Paypal {
+    public PayPalSDK $pal_sdk;
+    public function __constructor( PayPalSDK $pal_sdk ) {
+        $this->pal_sdk = $pal_sdk;
+    }
+}
+
+// if we create PayPal instances twice
+$paypal1 = $container->make( Paypal::class );
+$paypal2 = $container->make( Paypal::class );
+
+var_dump( $paypal1 !== $paypal2 ); // true
+var_dump( $paypal1->pal_sdk === $paypal2->pal_sdk ); // true
+```
+Dependencies of PayPal service will not be recreated and will be taken from already resolved objects.
+
+---
+
 ## PSR11 Compatibility
 This Simple DI Container compatible with PSR11 standards ver 2.0, to use it:
 1. Just import PSR11 interfaces in `Container.php`
@@ -156,9 +203,10 @@ use Psr\Container\NotFoundExceptionInterface;
 - [x] Add PSR11 interfaces in the Container.php.
 - [x] Add auto-wiring support for not bounded classes.
 - [x] Add resolved service storage (getting singleton).
-- [ ] Add ability to create new instances of service every time.
+- [x] Add ability to create new instances of service every time.
+- [x] Improve performance.
 - [ ] Fix deprecated `Use ReflectionParameter::getType() and the ReflectionType APIs should be used instead.` for PHP8
-- [ ] Improve performance.
+- [ ] Circular dependency protector.
 - [ ] Allow to set definitions via `__constructor`.
 - [ ] Bind $container instance by default.
 - [ ] Add supporting Code Driven IoC.
@@ -175,3 +223,5 @@ use Psr\Container\NotFoundExceptionInterface;
 - [ ] Add descriptions in the code for functions.
 - [ ] Choose codestyle
 - [ ] Add on packegist
+- [ ] Add if class exist checks in the Container file?
+- [ ] Rename Container.php to SimpleContainer.php

@@ -8,7 +8,7 @@
  * Author Email: renakdup@gmail.com
  * Author Site: https://wp-yoda.com/en/
  *
- * Version: 0.2.1
+ * Version: 0.2.2
  * Source Code: https://github.com/renakdup/simple-php-dic
  *
  * Licence: MIT License
@@ -90,6 +90,9 @@ class Container implements ContainerInterface {
 	protected array $resolved = [];
 
 	/**
+	 * Set service to the container. Allows to set configurable services
+	 * using factory "function () {}" as passed service.
+	 *
 	 * @param mixed $service
 	 */
 	public function set( string $id, $service ): void {
@@ -120,8 +123,25 @@ class Container implements ContainerInterface {
 	}
 
 	/**
-	 * @param string $id
+	 * Resolves service by its name. It returns a new instance of service every time, but the constructor's
+	 * dependencies will not instantiate every time. If dependencies were resolved before
+	 * then they will be passed as resolved dependencies.
 	 *
+	 * @throws ContainerExceptionInterface
+	 * @throws NotFoundExceptionInterface
+	 */
+	public function make( string $id ): object {
+		if ( ! class_exists( $id ) ) {
+			$message = "Service '{$id}' could not be resolved because class not exist.\n"
+					   . "Stack trace: \n"
+					   . $this->get_stack_trace();
+			throw new ContainerException( $message );
+		}
+
+		return $this->resolve_object( $id );
+	}
+
+	/**
 	 * @return mixed
 	 * @throws ContainerExceptionInterface
 	 * @throws NotFoundExceptionInterface
@@ -159,7 +179,6 @@ class Container implements ContainerInterface {
 	protected function resolve_object( string $service ): object {
 		try {
 			$reflected_class = new ReflectionClass( $service );
-
 			$constructor     = $reflected_class->getConstructor();
 
 			if ( ! $constructor ) {
@@ -172,10 +191,10 @@ class Container implements ContainerInterface {
 				return new $service();
 			}
 
-			$constructor_args = [];
+			$resolved_params = [];
 			foreach ( $params as $param ) {
 				if ( $param_class = $param->getClass() ) {
-					$constructor_args[] = $this->get( $param_class->getName() );
+					$resolved_params[] = $this->get( $param_class->getName() );
 					continue;
 				}
 
@@ -188,18 +207,17 @@ class Container implements ContainerInterface {
 					throw new ContainerException( $message );
 				}
 
-				$constructor_args[] = $default_value;
+				$resolved_params[] = $default_value;
 			}
 		} catch ( ReflectionException $e ) {
 			throw new ContainerException(
-				"Service '{$service}' could not be resolved due the reflection issue:\n '" .
-				$e->getMessage() . "'\n" .
+				"Service '{$service}' could not be resolved due the reflection issue: '" . $e->getMessage() . "'\n" .
 				"Stack trace: \n" .
 				$e->getTraceAsString()
 			);
 		}
 
-		return new $service( ...$constructor_args );
+		return new $service( ...$resolved_params );
 	}
 
 	protected function get_stack_trace(): string {

@@ -9,14 +9,20 @@ use Pisarevskii\SimpleDIC\Container;
 use Pisarevskii\SimpleDIC\ContainerException;
 use Pisarevskii\SimpleDIC\ContainerInterface;
 use Pisarevskii\SimpleDIC\ContainerNotFoundException;
+use PisarevskiiTests\SimpleDIC\Assets\AbstractClass;
+use PisarevskiiTests\SimpleDIC\Assets\ClassWithConstructorSupertypes;
 use PisarevskiiTests\SimpleDIC\Assets\InvocableClass;
 use PisarevskiiTests\SimpleDIC\Assets\ClassWithConstructorPrimitives;
 use PisarevskiiTests\SimpleDIC\Assets\ClassWithConstructor;
 use PisarevskiiTests\SimpleDIC\Assets\ClassWithConstructorDepsException;
-use PisarevskiiTests\SimpleDIC\Assets\StaticClass;
+use PisarevskiiTests\SimpleDIC\Assets\ParentClass;
+use PisarevskiiTests\SimpleDIC\Assets\SomeInterface;
 use PisarevskiiTests\SimpleDIC\Assets\SimpleClass;
+use PisarevskiiTests\SimpleDIC\Assets\UseAbstractClass;
+use PisarevskiiTests\SimpleDIC\Assets\UseInterfaceClass;
 use SplQueue;
 use stdClass;
+use Error;
 
 final class ContainerTest extends TestCase {
 	private ?Container $container;
@@ -125,17 +131,22 @@ final class ContainerTest extends TestCase {
 	}
 
 	public function test_get__autowiring() {
-		$obj1 = new SimpleClass();
+		$expected = new SimpleClass();
 		$this->container->set( $name = SimpleClass::class, SimpleClass::class );
 		self::assertEquals( new SimpleClass(), $this->container->get( $name ) );
 
-		$obj2 = new ClassWithConstructorPrimitives( $obj1 );
+		$expected = new ClassWithConstructorPrimitives( $expected );
 		$this->container->set( $name = ClassWithConstructorPrimitives::class, ClassWithConstructorPrimitives::class );
-		self::assertEquals( $obj2, $this->container->get( $name ) );
+		self::assertEquals( $expected, $this->container->get( $name ) );
 
-		$obj3 = new ClassWithConstructor( $obj2 );
+		$expected = new ClassWithConstructor( $expected );
 		$this->container->set( $name = ClassWithConstructor::class, ClassWithConstructor::class );
-		self::assertEquals( $obj3, $this->container->get( $name ) );
+		self::assertEquals( $expected, $this->container->get( $name ) );
+
+		$expected = new ClassWithConstructorSupertypes( new ParentClass(), new UseAbstractClass(), new UseInterfaceClass() );
+		$this->container->set( AbstractClass::class, UseAbstractClass::class );
+		$this->container->set( SomeInterface::class, UseInterfaceClass::class );
+		self::assertEquals( $expected, $this->container->get( ClassWithConstructorSupertypes::class ) );
 	}
 
 	public function test_get__autowiring_for_invocable() {
@@ -181,16 +192,37 @@ final class ContainerTest extends TestCase {
 		$this->container->get( ClassWithConstructorDepsException::class );
 	}
 
+	public function test_get__error_for_not_bound_supertypes() {
+		self::expectException( Error::class);
+		$this->container->get( ClassWithConstructorSupertypes::class );
+	}
+
+	public function test_make() {
+		/**
+		 * @var $obj1 ClassWithConstructorPrimitives
+		 * @var $obj2 ClassWithConstructorPrimitives
+		 */
+		$obj1 = $this->container->make( ClassWithConstructorPrimitives::class );
+		$obj2 = $this->container->make( ClassWithConstructorPrimitives::class );
+
+		self::assertNotSame( $obj1, $obj2 );
+		self::assertEquals( $obj1, $obj2 );
+
+		self::assertSame( $obj1->simple_class, $obj1->simple_class );
+		self::assertSame( $obj1->array, $obj1->array );
+		self::assertSame( $obj1->string, $obj1->string );
+	}
+
+	public function test_make__exception() {
+		self::expectException( ContainerException::class );
+
+		$this->container->make( 'this-string-is-not-class' );
+	}
+
 	public function test_has() {
 		$this->container->set( $name = 'service', new stdClass() );
 
 		self::assertTrue( $this->container->has( $name ) );
 		self::assertFalse( $this->container->has( 'not-exist' ) );
 	}
-
-// TODO:: do we need it?
-//	public function test_get__static_method_from_array() {
-//		$this->container->bind( $name = 'service', [ StaticClass::class, 'get_string' ] );
-//		self::assertSame( StaticClass::get_string(), $this->container->get( $name ) );
-//	}
 }

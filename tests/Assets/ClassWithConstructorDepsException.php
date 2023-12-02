@@ -6,9 +6,9 @@ namespace PisarevskiiTests\SimpleDIC\Assets;
 
 class ClassWithConstructorDepsException {
 
-	private SimpleClass $simple_class;
-	private string $string;
-	private array $array;
+	public SimpleClass $simple_class;
+	public string $string;
+	public array $array;
 
 	public function __construct(
 		SimpleClass $simple_class,
