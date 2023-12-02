@@ -1,14 +1,14 @@
-# Simple DI Container for WordPress
+# Simple PHP DIC - DI Container in one file.
 [![UnitTests](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpunit.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpunit.yaml)
 [![PHPStan](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpstan.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpstan.yaml)
 
 
 
-Simple DI Container with auto-wiring in a single file allows you to easily use it in your WordPress plugins and themes. 
+Simple DI Container with autowiring in a single file allows you to easily use it in your simple PHP applications and especially convenient for WordPress plugins and themes. 
 
 ## Why choose Simple DI Container?
-1. Easy to integrate into your WordPress project, just copy one file.
-2. Simple DI Container hasn't any dependencies on other scripts or libraries.
+1. Easy to integrate into your PHP Applocation or WordPress project, just copy one file.
+2. Simple PHP DI Container hasn't any dependencies on other scripts or libraries.
 3. Supports auto-wiring `__constructor` parameters for classes as well as for scalar types that have default values.
 4. Allow you following the best practices for developing your code.
 5. Supports PSR11 (read more about below).
@@ -157,6 +157,8 @@ use Psr\Container\NotFoundExceptionInterface;
 - [x] Add auto-wiring support for not bounded classes.
 - [x] Add resolved service storage (getting singleton).
 - [ ] Add ability to create new instances of service every time.
+- [ ] Fix deprecated `Use ReflectionParameter::getType() and the ReflectionType APIs should be used instead.` for PHP8
+- [ ] Improve performance.
 - [ ] Allow to set definitions via `__constructor`.
 - [ ] Bind $container instance by default.
 - [ ] Add supporting Code Driven IoC.

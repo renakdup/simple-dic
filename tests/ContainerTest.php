@@ -152,12 +152,10 @@ final class ContainerTest extends TestCase {
 	}
 
 	public function test_get__autowiring_not_bound_deps() {
-		$obj1 = new SimpleClass();
-		$obj2 = new ClassWithConstructorPrimitives( $obj1 );
-		$obj3 = new ClassWithConstructor( $obj2 );
+		$obj = new ClassWithConstructor( new ClassWithConstructorPrimitives( new SimpleClass() ) );
 
 		$this->container->set( $name = ClassWithConstructor::class, ClassWithConstructor::class );
-		self::assertEquals( $obj3, $this->container->get( $name ) );
+		self::assertEquals( $obj, $this->container->get( $name ) );
 
 		$this->container->set( SplQueue::class , SplQueue::class );
 		self::assertInstanceOf( SplQueue::class, $this->container->get( SplQueue::class ) );
@@ -177,17 +175,9 @@ final class ContainerTest extends TestCase {
 		$this->container->get( 'not-exist-service' );
 	}
 
-//	public function test_get__bind_autowiring_container_not_found_exception_class() {
-//		self::expectException( ContainerNotFoundException::class );
-//
-//		$this->container->get( SimpleClass::class );
-//	}
-
 	public function test_get__autowiring__container_exception() {
 		self::expectException( ContainerException::class );
 
-		$this->container->set( SimpleClass::class, SimpleClass::class );
-		$this->container->set( ClassWithConstructorDepsException::class, ClassWithConstructorDepsException::class );
 		$this->container->get( ClassWithConstructorDepsException::class );
 	}
 

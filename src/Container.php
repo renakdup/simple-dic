@@ -1,14 +1,15 @@
 <?php
 /**
- * Simple PHP DI Container (DIC) for WordPress with auto-wiring allows
- * you easily use it in your plugins and themes.
+ * Simple PHP DIC - DI Container in one file.
+ * Supports autowiring and allows you to easily use it in your simple PHP applications and
+ * especially convenient for WordPress plugins and themes.
  *
  * Author: Andrei Pisarevskii
  * Author Email: renakdup@gmail.com
  * Author Site: https://wp-yoda.com/en/
  *
- * Version: 0.2
- * Source Code: https://github.com/renakdup/simple-wordpress-dic
+ * Version: 0.2.1
+ * Source Code: https://github.com/renakdup/simple-php-dic
  *
  * Licence: MIT License
  */
@@ -20,6 +21,11 @@ namespace Pisarevskii\SimpleDIC;
 use Closure;
 use InvalidArgumentException;
 use ReflectionClass;
+use ReflectionException;
+
+use function array_key_exists;
+use function class_exists;
+use function is_string;
 
 ######## PSR11 2.0 interfaces #########
 # If you want to support PSR11, then remove 3 interfaces below
@@ -107,7 +113,18 @@ class Container implements ContainerInterface {
 	}
 
 	/**
+	 * @inheritdoc
+	 */
+	public function has( string $id ): bool {
+		return array_key_exists( $id, $this->services );
+	}
+
+	/**
+	 * @param string $id
+	 *
 	 * @return mixed
+	 * @throws ContainerExceptionInterface
+	 * @throws NotFoundExceptionInterface
 	 */
 	protected function resolve( string $id ) {
 		if ( $this->has( $id ) ) {
@@ -120,59 +137,90 @@ class Container implements ContainerInterface {
 			}
 
 			return $service;
-		} else {
-			if ( is_string( $id ) && class_exists( $id ) ) {
-				return $this->resolve_object( $id );
-			}
-
-			throw new ContainerNotFoundException( "Service '{$id}' not found in the Container." );
 		}
+
+		if ( class_exists( $id ) ) {
+			return $this->resolve_object( $id );
+		}
+
+		$message = "Service '{$id}' not found in the Container.\n"
+				   . "Stack trace: \n"
+				   . $this->get_stack_trace();
+		throw new ContainerNotFoundException( $message );
 	}
 
 	/**
 	 * @param class-string $service
+	 *
+	 * @return object
+	 * @throws ContainerExceptionInterface
+	 * @throws NotFoundExceptionInterface
 	 */
 	protected function resolve_object( string $service ): object {
-		$reflected_class = new ReflectionClass( $service );
-		$constructor     = $reflected_class->getConstructor();
+		try {
+			$reflected_class = new ReflectionClass( $service );
 
-		if ( ! $constructor ) {
-			return new $service();
-		}
+			$constructor     = $reflected_class->getConstructor();
 
-		$params = $constructor->getParameters();
-
-		if ( ! $params ) {
-			return new $service();
-		}
-
-		$constructor_args = [];
-		foreach ( $params as $param ) {
-			if ( $param_class = $param->getClass() ) {
-				$constructor_args[] = $this->get( $param_class->getName() );
-				continue;
+			if ( ! $constructor ) {
+				return new $service();
 			}
 
-			try {
+			$params = $constructor->getParameters();
+
+			if ( ! $params ) {
+				return new $service();
+			}
+
+			$constructor_args = [];
+			foreach ( $params as $param ) {
+				if ( $param_class = $param->getClass() ) {
+					$constructor_args[] = $this->get( $param_class->getName() );
+					continue;
+				}
+
 				$default_value = $param->getDefaultValue();
 				if ( ! $default_value && $default_value !== null ) {
-					throw new ContainerException( 'Service "' . $reflected_class->getName() . '" could not be resolved due constructor parameter "' . $param->getName() . '"' );
+					$message = 'Service "' . $reflected_class->getName() . '" could not be resolved,' .
+							   'because parameter of constructor "' . $param->getName() . '" has not default value.' . "\n" .
+							   "Stack trace: \n" .
+							   $this->get_stack_trace();
+					throw new ContainerException( $message );
 				}
-			} catch ( \ReflectionException $e ) {
-				throw new ContainerException( 'Service "' . $reflected_class->getName() . '" could not be resolved because parameter of constructor "' . $param . '" has the Reflection issue while resolving: ' . $e->getMessage() );
-			}
 
-			$constructor_args[] = $default_value;
+				$constructor_args[] = $default_value;
+			}
+		} catch ( ReflectionException $e ) {
+			throw new ContainerException(
+				"Service '{$service}' could not be resolved due the reflection issue:\n '" .
+				$e->getMessage() . "'\n" .
+				"Stack trace: \n" .
+				$e->getTraceAsString()
+			);
 		}
 
 		return new $service( ...$constructor_args );
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function has( string $id ): bool {
-		return array_key_exists( $id, $this->services );
+	protected function get_stack_trace(): string {
+		$stackTraceArray  = debug_backtrace();
+		$stackTraceString = '';
+
+		foreach ( $stackTraceArray as $item ) {
+			$file     = $item['file'] ?? '[internal function]';
+			$line     = $item['line'] ?? '';
+			$function = $item['function'] ?? ''; // @phpstan-ignore-line
+			$class    = $item['class'] ?? '';
+			$type     = $item['type'] ?? '';
+
+			$stackTraceString .= "{$file}({$line}): ";
+			if ( ! empty( $class ) ) {
+				$stackTraceString .= "{$class}{$type}";
+			}
+			$stackTraceString .= "{$function}()\n";
+		}
+
+		return $stackTraceString;
 	}
 }
 
