@@ -1,4 +1,5 @@
 # Simple PHP DIC - DI Container in one file.
+[![Software License][ico-license]](LICENSE)
 [![UnitTests](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpunit.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpunit.yaml)
 [![PHPStan](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpstan.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpstan.yaml)
 
@@ -214,6 +215,7 @@ use Psr\Container\NotFoundExceptionInterface;
 - [ ] Add `remove` method.
 - [ ] Save cache in opcache.
 - [ ] PHP 8 named arguments and autowiring.
+- [ ] Add Performance Benchmarks
 
 ## Nice to have
 - [x] Integrate CI with running autotests
@@ -225,3 +227,10 @@ use Psr\Container\NotFoundExceptionInterface;
 - [ ] Add on packegist
 - [ ] Add if class exist checks in the Container file?
 - [ ] Rename Container.php to SimpleContainer.php
+- [ ] Show stack trace when I have a debug only?
+
+## License
+
+The MIT License (MIT). Please see the [License File](LICENSE) for more information.
+
+[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg

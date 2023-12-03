@@ -8,7 +8,7 @@
  * Author Email: renakdup@gmail.com
  * Author Site: https://wp-yoda.com/en/
  *
- * Version: 0.2.2
+ * Version: 0.2.3
  * Source Code: https://github.com/renakdup/simple-php-dic
  *
  * Licence: MIT License
@@ -22,6 +22,7 @@ use Closure;
 use InvalidArgumentException;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionParameter;
 
 use function array_key_exists;
 use function class_exists;
@@ -90,6 +91,11 @@ class Container implements ContainerInterface {
 	protected array $resolved = [];
 
 	/**
+	 * @var ReflectionClass[]
+	 */
+	protected array $reflection_cache = [];
+
+	/**
 	 * Set service to the container. Allows to set configurable services
 	 * using factory "function () {}" as passed service.
 	 *
@@ -98,6 +104,7 @@ class Container implements ContainerInterface {
 	public function set( string $id, $service ): void {
 		$this->services[ $id ] = $service;
 		unset( $this->resolved[ $id ] );
+		unset( $this->reflection_cache[ $id ] );
 	}
 
 	/**
@@ -178,8 +185,9 @@ class Container implements ContainerInterface {
 	 */
 	protected function resolve_object( string $service ): object {
 		try {
-			$reflected_class = new ReflectionClass( $service );
-			$constructor     = $reflected_class->getConstructor();
+			$reflected_class = $this->reflection_cache[ $service ] ?? new ReflectionClass( $service );
+
+			$constructor = $reflected_class->getConstructor();
 
 			if ( ! $constructor ) {
 				return new $service();
@@ -191,24 +199,8 @@ class Container implements ContainerInterface {
 				return new $service();
 			}
 
-			$resolved_params = [];
-			foreach ( $params as $param ) {
-				if ( $param_class = $param->getClass() ) {
-					$resolved_params[] = $this->get( $param_class->getName() );
-					continue;
-				}
+			$resolved_params = $this->resolve_parameters( $params );
 
-				$default_value = $param->getDefaultValue();
-				if ( ! $default_value && $default_value !== null ) {
-					$message = 'Service "' . $reflected_class->getName() . '" could not be resolved,' .
-							   'because parameter of constructor "' . $param->getName() . '" has not default value.' . "\n" .
-							   "Stack trace: \n" .
-							   $this->get_stack_trace();
-					throw new ContainerException( $message );
-				}
-
-				$resolved_params[] = $default_value;
-			}
 		} catch ( ReflectionException $e ) {
 			throw new ContainerException(
 				"Service '{$service}' could not be resolved due the reflection issue: '" . $e->getMessage() . "'\n" .
@@ -220,6 +212,45 @@ class Container implements ContainerInterface {
 		return new $service( ...$resolved_params );
 	}
 
+	/**
+	 * @param ReflectionParameter[] $params
+	 *
+	 * @return mixed[]
+	 * @throws ContainerExceptionInterface
+	 * @throws ReflectionException
+	 */
+	protected function resolve_parameters( array $params ): array {
+		$resolved_params = [];
+		foreach ( $params as $param ) {
+			$resolved_params[] = $this->resolve_parameter( $param );
+		}
+
+		return $resolved_params;
+	}
+
+	/**
+	 * @param ReflectionParameter $param
+	 *
+	 * @return mixed|object
+	 * @throws ContainerExceptionInterface
+	 * @throws ReflectionException
+	 */
+	protected function resolve_parameter( ReflectionParameter $param ) {
+		if ( $param_class = $param->getClass() ) {
+			return $this->get( $param_class->getName() );
+		}
+
+		if ( $param->isOptional() ) {
+			return $param->getDefaultValue();
+		}
+
+		// @phpstan-ignore-next-line - Cannot call method getName() on ReflectionClass|null.
+		$message = "Parameter '{$param->getName()}' of '{$param->getDeclaringClass()->getName()}' cannot be resolved.\n" .
+				   "Stack trace: \n" .
+				   $this->get_stack_trace();
+		throw new ContainerException( $message );
+	}
+
 	protected function get_stack_trace(): string {
 		$stackTraceArray  = debug_backtrace();
 		$stackTraceString = '';
@@ -227,7 +258,7 @@ class Container implements ContainerInterface {
 		foreach ( $stackTraceArray as $item ) {
 			$file     = $item['file'] ?? '[internal function]';
 			$line     = $item['line'] ?? '';
-			$function = $item['function'] ?? ''; // @phpstan-ignore-line
+			$function = $item['function'] ?? ''; // @phpstan-ignore-line - 'function' on array always exists and is not nullable.
 			$class    = $item['class'] ?? '';
 			$type     = $item['type'] ?? '';
 

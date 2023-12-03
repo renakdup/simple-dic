@@ -16,4 +16,4 @@ parameters:
 		- ./src
 
 	ignoreErrors:
-
+		- '#Property Pisarevskii\\SimpleDIC\\Container::\$reflection_cache with generic class ReflectionClass does not specify its types#'
