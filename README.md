@@ -5,7 +5,7 @@
 
 
 
-Simple DI Container with autowiring in a single file allows you to easily use it in your simple PHP applications and especially convenient for WordPress plugins and themes. 
+Simple PHP DI Container with autowiring in a single file allows you to easily use it in your simple PHP applications and especially convenient for WordPress plugins and themes. 
 
 ## Why choose Simple DI Container?
 1. Easy to integrate into your PHP Application or WordPress project, just copy one file.
