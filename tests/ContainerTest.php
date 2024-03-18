@@ -96,14 +96,14 @@ final class ContainerTest extends TestCase {
 		self::assertEquals( new SimpleClass(), $this->container->get( SimpleClass::class ) );
 	}
 
-	public function test_get__check_singleton_for_not_bounded() {
+	public function test_get__singleton_check_for_not_bounded() {
 		self::assertSame(
 			$this->container->get( SimpleClass::class ),
 			$this->container->get( SimpleClass::class )
 		);
 	}
 
-	public function test_get__check_changing_singleton_property() {
+	public function test_get__singleton_check_changing_property() {
 		$this->container->set( $name = 'service', function () {
 			$obj        = new stdClass();
 			$obj->title = 'first title';
@@ -128,6 +128,14 @@ final class ContainerTest extends TestCase {
 			$obj1->obj_with_constructor_deps->simple_class,
 			$this->container->get( SimpleClass::class )
 		);
+	}
+
+	public function test_get__singleton_autoregister_container() {
+		$obj = $this->container->get( Container::class );
+		$obj2 = $this->container->get( ContainerInterface::class );
+
+		self::assertSame( $this->container, $obj );
+		self::assertSame( $this->container, $obj2 );
 	}
 
 	public function test_get__autowiring() {

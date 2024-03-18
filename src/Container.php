@@ -8,7 +8,7 @@
  * Author Email: renakdup@gmail.com
  * Author Site: https://wp-yoda.com/en/
  *
- * Version: 0.2.3
+ * Version: 0.2.4
  * Source Code: https://github.com/renakdup/simple-php-dic
  *
  * Licence: MIT License
@@ -94,6 +94,14 @@ class Container implements ContainerInterface {
 	 * @var ReflectionClass[]
 	 */
 	protected array $reflection_cache = [];
+
+	public function __construct() {
+		// Auto-register the container
+		$this->resolved = [
+			self::class => $this,
+			ContainerInterface::class => $this,
+		];
+	}
 
 	/**
 	 * Set service to the container. Allows to set configurable services
