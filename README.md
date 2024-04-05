@@ -1,4 +1,4 @@
-# Simple PHP DIC - DI Container in one file.
+# Simple PHP DIC (SimpleDIC) - DI Container in one file.
 [![Software License][ico-license]](LICENSE)
 [![UnitTests](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpunit.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpunit.yaml)
 [![PHPStan](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpstan.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpstan.yaml)
