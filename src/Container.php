@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignoreFile
 /**
  * Simple PHP DIC - DI Container in one file.
  * Supports autowiring and allows you to easily use it in your simple PHP applications and
@@ -8,7 +8,7 @@
  * Author Email: renakdup@gmail.com
  * Author Site: https://wp-yoda.com/en/
  *
- * Version: 0.2.4
+ * Version: 0.2.5
  * Source Code: https://github.com/renakdup/simple-php-dic
  *
  * Licence: MIT License
@@ -98,7 +98,7 @@ class Container implements ContainerInterface {
 	public function __construct() {
 		// Auto-register the container
 		$this->resolved = [
-			self::class => $this,
+			self::class               => $this,
 			ContainerInterface::class => $this,
 		];
 	}
@@ -147,9 +147,7 @@ class Container implements ContainerInterface {
 	 */
 	public function make( string $id ): object {
 		if ( ! class_exists( $id ) ) {
-			$message = "Service '{$id}' could not be resolved because class not exist.\n"
-					   . "Stack trace: \n"
-					   . $this->get_stack_trace();
+			$message = "Service `{$id}` could not be resolved because class not exist.";
 			throw new ContainerException( $message );
 		}
 
@@ -178,10 +176,7 @@ class Container implements ContainerInterface {
 			return $this->resolve_object( $id );
 		}
 
-		$message = "Service '{$id}' not found in the Container.\n"
-				   . "Stack trace: \n"
-				   . $this->get_stack_trace();
-		throw new ContainerNotFoundException( $message );
+		throw new ContainerNotFoundException( "Service `{$id}` not found in the Container." );
 	}
 
 	/**
@@ -211,9 +206,7 @@ class Container implements ContainerInterface {
 
 		} catch ( ReflectionException $e ) {
 			throw new ContainerException(
-				"Service '{$service}' could not be resolved due the reflection issue: '" . $e->getMessage() . "'\n" .
-				"Stack trace: \n" .
-				$e->getTraceAsString()
+				"Service `{$service}` could not be resolved due the reflection issue: `{$e->getMessage()}`"
 			);
 		}
 
@@ -253,9 +246,7 @@ class Container implements ContainerInterface {
 		}
 
 		// @phpstan-ignore-next-line - Cannot call method getName() on ReflectionClass|null.
-		$message = "Parameter '{$param->getName()}' of '{$param->getDeclaringClass()->getName()}' cannot be resolved.\n" .
-				   "Stack trace: \n" .
-				   $this->get_stack_trace();
+		$message = "Parameter `{$param->getName()}` of `{$param->getDeclaringClass()->getName()}` can't be resolved.";
 		throw new ContainerException( $message );
 	}
 
