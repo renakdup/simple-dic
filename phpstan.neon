@@ -1,6 +1,6 @@
 parameters:
 	level: 9
-	phpVersion: 70400 # PHP 7.4
+	phpVersion: 80200
 	parallel:
 		jobSize: 20
 		maximumNumberOfProcesses: 2
@@ -15,5 +15,3 @@ parameters:
 	paths:
 		- ./src
 
-	ignoreErrors:
-		- '#Property Pisarevskii\\SimpleDIC\\Container::\$reflection_cache with generic class ReflectionClass does not specify its types#'

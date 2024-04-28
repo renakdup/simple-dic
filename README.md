@@ -14,6 +14,7 @@ Simple PHP DI Container with autowiring in a single file allows you to easily us
 4. Supports Lazy Load class instantiating.
 5. Allow you following the best practices for developing your code.
 6. Supports PSR11 (read more about below).
+7. Supports PHP ^8 and PHP 7.4.
 
 ## How to integrate it in a project?
 1. Just copy the file `./src/Container.php` to your plugin directory or theme.
@@ -206,7 +207,7 @@ use Psr\Container\NotFoundExceptionInterface;
 - [x] Add resolved service storage (getting singleton).
 - [x] Add ability to create new instances of service every time.
 - [x] Improve performance.
-- [ ] Fix deprecated `Use ReflectionParameter::getType() and the ReflectionType APIs should be used instead.` for PHP8
+- [x] Fix deprecated `Use ReflectionParameter::getType() and the ReflectionType APIs should be used instead.` for PHP8
 - [ ] Circular dependency protector.
 - [ ] Allow to set definitions via `__constructor`.
 - [ ] Bind $container instance by default.
