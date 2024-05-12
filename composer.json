@@ -2,6 +2,7 @@
     "name": "renakdup/simple-php-dic",
     "description": "Simple DI Container with autowiring for your WordPress application with NO dependencies.",
     "type": "library",
+    "license": "MIT",
     "keywords": [
         "dic",
         "di container",
