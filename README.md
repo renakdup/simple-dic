@@ -2,36 +2,44 @@
 [![Software License][ico-license]](LICENSE)
 [![UnitTests](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpunit.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpunit.yaml)
 [![PHPStan](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpstan.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpstan.yaml)
+[![PHP Version Require](http://poser.pugx.org/renakdup/simple-php-dic/require/php)](https://packagist.org/packages/renakdup/simple-php-dic)
+[![Dependents](http://poser.pugx.org/renakdup/simple-php-dic/dependents)](https://packagist.org/packages/renakdup/simple-php-dic)
 
 
+Simple DI Container with **autowiring** in a single file **with NO dependencies** allows you to easily use it in your PHP applications and especially convenient for **WordPress** plugins and themes. 
 
-Simple DI Container with **autowiring** in a single file **without dependencies** allows you to easily use it in your PHP applications and especially convenient for **WordPress** plugins and themes. 
-
-## Why choose Simple DI Container?
-1. Easy to integrate into your PHP Application or WordPress project, just copy one file.
-2. Simple PHP DI Container hasn't any dependencies on other scripts or libraries.
+## Why choose Simple DI Container
+1. Easy to integrate in your WordPress project - just copy one file or install via Composer.
+2. No dependencies on other scripts or libraries.
 3. Supports auto-wiring `__constructor` parameters for classes as well as for scalar types that have default values.
-4. Supports PHP ^8 and PHP 7.4.
-5. Supports Lazy Load class instantiating.
-6. Allow you following the best practices for developing your code.
-7. Supports PSR11 (read more about below).
-8. No phpcs conflicts.
+4. Supports PHP ^7.4|^8.
+5. Allow you following the best practices for developing your code.
+6. No PHPCS conflicts.
+7. Supports Lazy Load class instantiating.
+8. Lightweight and fast.
 
-## How to integrate it in a project?
+## How to install in a project
 
-1. Just copy the file `./src/Container.php` to your plugin directory or theme.
-2. Rename `namespace` in the file from `Renakdup\SimpleDIC` to `<Your_Plugin_Name>\SimpleDIC`
-3. Require this file.
+There are several ways, you can choose what you more prefer:
 
-## How to use it in code
+### Install via Composer
+```bash
+composer require renakdup/simple-php-dic
+```
+
+### Copy and paste file
+   1. Just copy the file `./src/Container.php` to your plugin directory or theme.
+   2. Rename `namespace` in the file  
+   from `Renakdup\SimpleDIC` to `<Your_Plugin_Name>\SimpleDIC`
+   3. Include the file.
+
+## How to use it
 
 ### Get started:
-
-1. Add file to your application and `include`.
-2. Create a container.
-3. Set a service
-4. Get a service
-5. Use object
+1. Create container instance.
+2. Set a service
+3. Get a service
+4. Use object
 ```php
 use Renakdup\SimpleDIC\Container;
 
