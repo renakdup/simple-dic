@@ -1,8 +1,23 @@
 {
-    "name": "pisarevskii/simple-dic",
-    "description": "Simple DI Container with autowiring for your PHP application or WordPress plugins.",
+    "name": "renakdup/simple-php-dic",
+    "description": "Simple DI Container with autowiring for your WordPress application with NO dependencies.",
     "type": "library",
-    "license": "MIT",
+    "keywords": [
+        "dic",
+        "di container",
+        "simple dic",
+        "dic autowiring",
+        "simple php dic",
+        "wordpress dic",
+        "wordpress di container",
+        "wp",
+        "wordpress",
+        "wordpress plugin",
+        "wordpress mu-plugin",
+        "wordpress-library",
+        "wp plugin",
+        "mu-plugin"
+    ],
     "authors": [
         {
             "name": "Andrei Pisarevskii",
@@ -22,8 +37,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Pisarevskii\\SimpleDIC\\": "src/",
-            "PisarevskiiTests\\SimpleDIC\\": "tests/"
+            "Renakdup\\SimpleDIC\\": "src/",
+            "RenakdupTests\\SimpleDIC\\": "tests/"
         }
     },
     "scripts": {

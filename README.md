@@ -1,36 +1,39 @@
-# Simple PHP DIC (SimpleDIC) - DI Container in one file.
+# Simple DIC - PHP DI Container in one file for your WordPress.
 [![Software License][ico-license]](LICENSE)
 [![UnitTests](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpunit.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpunit.yaml)
 [![PHPStan](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpstan.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpstan.yaml)
 
 
 
-Simple PHP DI Container with autowiring in a single file allows you to easily use it in your simple PHP applications and especially convenient for WordPress plugins and themes. 
+Simple DI Container with **autowiring** in a single file **without dependencies** allows you to easily use it in your PHP applications and especially convenient for **WordPress** plugins and themes. 
 
 ## Why choose Simple DI Container?
 1. Easy to integrate into your PHP Application or WordPress project, just copy one file.
 2. Simple PHP DI Container hasn't any dependencies on other scripts or libraries.
 3. Supports auto-wiring `__constructor` parameters for classes as well as for scalar types that have default values.
-4. Supports Lazy Load class instantiating.
-5. Allow you following the best practices for developing your code.
-6. Supports PSR11 (read more about below).
-7. Supports PHP ^8 and PHP 7.4.
+4. Supports PHP ^8 and PHP 7.4.
+5. Supports Lazy Load class instantiating.
+6. Allow you following the best practices for developing your code.
+7. Supports PSR11 (read more about below).
+8. No phpcs conflicts.
 
 ## How to integrate it in a project?
+
 1. Just copy the file `./src/Container.php` to your plugin directory or theme.
-2. Rename `namespace` in the file from `Pisarevskii\SimpleDIC` to `<Your_Plugin_Name>\SimpleDIC`
+2. Rename `namespace` in the file from `Renakdup\SimpleDIC` to `<Your_Plugin_Name>\SimpleDIC`
 3. Require this file.
 
 ## How to use it in code
 
 ### Get started:
 
-1. Create a container
-2. Set a service
-3. Get a service
-4. Use object
+1. Add file to your application and `include`.
+2. Create a container.
+3. Set a service
+4. Get a service
+5. Use object
 ```php
-use Pisarevskii\SimpleDIC\Container;
+use Renakdup\SimpleDIC\Container;
 
 // create container
 $container = new Container();
@@ -177,25 +180,7 @@ Dependencies of PayPal service will not be recreated and will be taken from alre
 ---
 
 ## PSR11 Compatibility
-This Simple DI Container compatible with PSR11 standards ver 2.0, to use it:
-1. Just import PSR11 interfaces in `Container.php`
-```php
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
-```
-2. Remove PSR11 interfaces from the `Container.php` file:
-```php
-######## PSR11 2.0 interfaces #########
-
-#     ..... PSR11 interfaces
-
-######## PSR11 interfaces - END #########
-```
-
-> [!NOTE]  
-> Some plugins use PSR11 interfaces and these files are stored inside these plugins as well as PSR interfaces have versions and are usually not compatible between major versions.  
-> **Due that I highly recommend you keep these interfaces inside the file and use PSR11 interfaces under your Plugin/Theme namespace.**
+in progress
 
 ## Roadmap
 - [x] Add binding services with configuration
@@ -208,15 +193,9 @@ use Psr\Container\NotFoundExceptionInterface;
 - [x] Add ability to create new instances of service every time.
 - [x] Improve performance.
 - [x] Fix deprecated `Use ReflectionParameter::getType() and the ReflectionType APIs should be used instead.` for PHP8
-- [ ] Circular dependency protector.
-- [ ] Allow to set definitions via `__constructor`.
-- [ ] Bind $container instance by default.
-- [ ] Add supporting Code Driven IoC.
-- [ ] Add configurations of Container.
+- [x] Bind $container instance by default.
 - [ ] Add `remove` method.
-- [ ] Save cache in opcache.
-- [ ] PHP 8 named arguments and autowiring.
-- [ ] Add Performance Benchmarks
+- [ ] Circular dependency protector.
 
 ## Nice to have
 - [x] Integrate CI with running autotests
@@ -229,6 +208,11 @@ use Psr\Container\NotFoundExceptionInterface;
 - [ ] Add if class exist checks in the Container file?
 - [ ] Rename Container.php to SimpleContainer.php
 - [ ] Show stack trace when I have a debug only?
+- [ ] PHP 8 named arguments and autowiring.
+- [ ] Allow to set definitions via `__constructor`.
+- [ ] Add supporting Code Driven IoC.
+- [ ] Add configurations of Container.
+- [ ] Add Performance Benchmarks
 
 ## License
 
