@@ -212,25 +212,4 @@ class Container {
 		$message = "Parameter `{$param->getName()}` of `{$param->getDeclaringClass()->getName()}` can't be resolved.";
 		throw new Exception( $message );
 	}
-
-	protected function get_stack_trace(): string {
-		$stackTraceArray  = debug_backtrace();
-		$stackTraceString = '';
-
-		foreach ( $stackTraceArray as $item ) {
-			$file     = $item['file'] ?? '[internal function]';
-			$line     = $item['line'] ?? '';
-			$function = $item['function'] ?? ''; // @phpstan-ignore-line - 'function' on array always exists and is not nullable.
-			$class    = $item['class'] ?? '';
-			$type     = $item['type'] ?? '';
-
-			$stackTraceString .= "{$file}({$line}): ";
-			if ( ! empty( $class ) ) {
-				$stackTraceString .= "{$class}{$type}";
-			}
-			$stackTraceString .= "{$function}()\n";
-		}
-
-		return $stackTraceString;
-	}
 }
