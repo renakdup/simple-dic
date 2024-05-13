@@ -8,7 +8,7 @@
  * Author Email: renakdup@gmail.com
  * Author Site: https://wp-yoda.com/en/
  *
- * Version: 1.0
+ * Version: 1.1.0
  * Source Code: https://github.com/renakdup/simple-php-dic
  *
  * Licence: MIT License
@@ -114,7 +114,7 @@ class Container {
 			throw new Exception( $message );
 		}
 
-		return $this->resolve_object( $id );
+		return $this->resolve_class( $id );
 	}
 
 	/**
@@ -128,14 +128,14 @@ class Container {
 			if ( $service instanceof Closure ) {
 				return $service( $this );
 			} elseif ( is_string( $service ) && class_exists( $service ) ) {
-				return $this->resolve_object( $service );
+				return $this->resolve_class( $service );
 			}
 
 			return $service;
 		}
 
 		if ( class_exists( $id ) ) {
-			return $this->resolve_object( $id );
+			return $this->resolve_class( $id );
 		}
 
 		throw new Exception( "Service `{$id}` not found in the Container." );
@@ -147,12 +147,12 @@ class Container {
 	 * @return object
 	 * @throws Exception
 	 */
-	protected function resolve_object( string $service ): object {
+	protected function resolve_class( string $service ): object {
 		try {
 			$reflected_class = $this->reflection_cache[ $service ] ?? new ReflectionClass( $service );
 
 			$constructor = $reflected_class->getConstructor();
-
+			
 			if ( ! $constructor ) {
 				return new $service();
 			}
@@ -164,7 +164,6 @@ class Container {
 			}
 
 			$resolved_params = $this->resolve_parameters( $params );
-
 		} catch ( ReflectionException $e ) {
 			throw new Exception(
 				"Service `{$service}` could not be resolved due the reflection issue: `{$e->getMessage()}`"
@@ -184,7 +183,7 @@ class Container {
 	protected function resolve_parameters( array $params ): array {
 		$resolved_params = [];
 		foreach ( $params as $param ) {
-			$resolved_params[] = $this->resolve_parameter( $param );
+			$resolved_params[] = $this->resolve_param( $param );
 		}
 
 		return $resolved_params;
@@ -197,7 +196,7 @@ class Container {
 	 * @throws Exception
 	 * @throws ReflectionException
 	 */
-	protected function resolve_parameter( ReflectionParameter $param ) {
+	protected function resolve_param( ReflectionParameter $param ) {
 		$param_type = $param->getType();
 
 		if ( $param_type instanceof ReflectionNamedType && ! $param_type->isBuiltin() ) {

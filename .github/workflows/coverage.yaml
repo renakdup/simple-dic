@@ -1,4 +1,4 @@
-name: UnitTests
+name: Coverage
 
 env:
   PHP_VER: "8.2"
@@ -9,6 +9,9 @@ on:
     branches: [ "main" ]
   pull_request:
     types: [ synchronize, opened, reopened ]
+  schedule:
+    - cron: '0 12 * * *'
+    #- cron:  '0 12 1 * *' # every month
 
 jobs:
   php-ci:
@@ -21,6 +24,7 @@ jobs:
         with:
           php-version: ${{ env.PHP_VER }}
           tools: composer:v${{ env.COMPOSER_VER }}
+          coverage: pcov
 
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -38,6 +42,9 @@ jobs:
         run: |
           composer install
 
-      - name: Run tests
-        run: |
-          composer run phpunit
+      - name: Tests coverage
+        uses: paambaati/codeclimate-action@v2.6.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: composer run phpunit-coverage

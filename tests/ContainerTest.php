@@ -9,11 +9,13 @@ use PHPUnit\Framework\TestCase;
 use Renakdup\SimpleDIC\Container;
 use RenakdupTests\SimpleDIC\Assets\AbstractClass;
 use RenakdupTests\SimpleDIC\Assets\ClassWithConstructorSupertypes;
+use RenakdupTests\SimpleDIC\Assets\EmptyConstructor;
 use RenakdupTests\SimpleDIC\Assets\InvocableClass;
 use RenakdupTests\SimpleDIC\Assets\ClassWithConstructorPrimitives;
 use RenakdupTests\SimpleDIC\Assets\ClassWithConstructor;
 use RenakdupTests\SimpleDIC\Assets\ClassWithConstructorDepsException;
 use RenakdupTests\SimpleDIC\Assets\ParentClass;
+use RenakdupTests\SimpleDIC\Assets\PrivateConstructor;
 use RenakdupTests\SimpleDIC\Assets\SomeInterface;
 use RenakdupTests\SimpleDIC\Assets\SimpleClass;
 use RenakdupTests\SimpleDIC\Assets\UseAbstractClass;
@@ -90,11 +92,16 @@ final class ContainerTest extends TestCase {
 		self::assertEquals( new SimpleClass(), $this->container->get( $name2 ) );
 	}
 
+	public function test_get__no_args_of_constructor(): void {
+		$this->container->set( $name = 'service', EmptyConstructor::class );
+		self::assertEquals( new EmptyConstructor(), $this->container->get( $name ) );
+	}
+
 	public function test_get__create_not_bound_service(): void {
 		self::assertEquals( new SimpleClass(), $this->container->get( SimpleClass::class ) );
 	}
 
-	public function test_get__singleton_check_for_not_bounded() {
+	public function test_get__singleton_check_for_not_bounded(): void {
 		self::assertSame(
 			$this->container->get( SimpleClass::class ),
 			$this->container->get( SimpleClass::class )
@@ -223,6 +230,19 @@ final class ContainerTest extends TestCase {
 		self::expectException( Exception::class );
 
 		$this->container->make( 'this-string-is-not-class' );
+	}
+
+	/**
+	 * This Exception should never have been reached if the code works well.
+	 * We should keep try-catch `ReflectionException` in the code, but the test is needed just to fit 100% of coverage.
+	 */
+	public function test_get__reflection_exception(): void {
+		self::expectException( Exception::class );
+
+		$fn = ( function () {
+			$this->resolve_class( 'NotExistingClass' );
+		} )->call( $this->container );
+		$fn();
 	}
 
 	public function test_has(): void {

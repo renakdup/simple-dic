@@ -1,11 +1,9 @@
 # Simple DIC - PHP DI Container in one file for your WordPress.
 [![UnitTests](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpunit.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpunit.yaml)
-[![PHPStan](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpstan.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpstan.yaml)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/21ae6e3776b160b24e75/test_coverage)](https://codeclimate.com/github/renakdup/simple-php-dic/test_coverage)
+[![PHPStan](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpstan.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpstan.yaml)
 [![PHP Version Require](http://poser.pugx.org/renakdup/simple-php-dic/require/php)](https://packagist.org/packages/renakdup/simple-php-dic)
 [![Dependents](http://poser.pugx.org/renakdup/simple-php-dic/dependents)](https://packagist.org/packages/renakdup/simple-php-dic)
-[![Software License][ico-license]](LICENSE)
-
 
 Simple DI Container with **autowiring** in a single file **with NO dependencies** allows you to easily use it in your PHP applications and especially convenient for **WordPress** plugins and themes. 
 
@@ -20,7 +18,6 @@ Simple DI Container with **autowiring** in a single file **with NO dependencies*
 8. Lightweight and fast.
 
 ## How to install in a project
-
 There are several ways, you can choose what you more prefer:
 
 ### Install via Composer
@@ -225,6 +222,8 @@ in progress
 
 ## License
 
-The MIT License (MIT). Please see the [License File](LICENSE) for more information.
+[![Software License][ico-license]](LICENSE)
+
+The MIT License (MIT). Please see the [License File](LICENSE) for more information. 
 
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg
