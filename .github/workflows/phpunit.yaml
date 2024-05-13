@@ -39,11 +39,7 @@ jobs:
         run: |
           composer install
 
-      - name: Coverage
-        run: |
-          composer run phpunit-coverage
-
-      - name: Test & publish code coverage
+      - name: Tests coverage
         uses: paambaati/codeclimate-action@v2.6.0
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
