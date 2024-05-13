@@ -3,6 +3,7 @@
 [![UnitTests](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpunit.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpunit.yaml)
 [![PHPStan](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpstan.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpstan.yaml)
 [![PHP Version Require](http://poser.pugx.org/renakdup/simple-php-dic/require/php)](https://packagist.org/packages/renakdup/simple-php-dic)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/21ae6e3776b160b24e75/test_coverage)](https://codeclimate.com/github/renakdup/simple-php-dic/test_coverage)
 [![Dependents](http://poser.pugx.org/renakdup/simple-php-dic/dependents)](https://packagist.org/packages/renakdup/simple-php-dic)
 
 

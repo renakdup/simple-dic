@@ -21,6 +21,7 @@ jobs:
         with:
           php-version: ${{ env.PHP_VER }}
           tools: composer:v${{ env.COMPOSER_VER }}
+          coverage: pcov
 
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -38,5 +39,9 @@ jobs:
         run: |
           composer install
 
-      - name: Run PHPUnit
-        run: composer run phpunit
+      - name: Tests coverage
+        uses: paambaati/codeclimate-action@v2.6.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: composer run phpunit-coverage
