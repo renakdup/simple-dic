@@ -21,6 +21,7 @@ jobs:
         with:
           php-version: ${{ env.PHP_VER }}
           tools: composer:v${{ env.COMPOSER_VER }}
+          coverage: pcov
 
       - name: Get Composer Cache Directory
         id: composer-cache
