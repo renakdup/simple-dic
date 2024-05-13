@@ -44,4 +44,4 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
-          coverageCommand: ./vendor/bin/phpunit --coverage-clover
+          coverageCommand: composer run phpunit-coverage
