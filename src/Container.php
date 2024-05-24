@@ -1,15 +1,15 @@
 <?php // phpcs:ignoreFile
 /**
- * Simple PHP DIC - DI Container in one file for WordPress.
+ * Simple DIC - DI Container in one file for WordPress and PHP Applications.
  * Supports autowiring and allows you to easily use it in your simple PHP applications and
- * especially convenient for WordPress plugins and themes.
+ * especially convenient for WordPress plugins and themes and others.
  *
  * Author: Andrei Pisarevskii
  * Author Email: renakdup@gmail.com
  * Author Site: https://wp-yoda.com/en/
  *
- * Version: 1.1.0
- * Source Code: https://github.com/renakdup/simple-php-dic
+ * Version: 1.1.2
+ * Source Code: https://github.com/renakdup/simple-dic
  *
  * Licence: MIT License
  */
