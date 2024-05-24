@@ -1,5 +1,5 @@
 {
-    "name": "renakdup/simple-php-dic",
+    "name": "renakdup/simple-dic",
     "description": "Simple DI Container with autowiring for your WordPress application with NO dependencies.",
     "type": "library",
     "license": "MIT",
@@ -7,6 +7,7 @@
         "dic",
         "di container",
         "simple dic",
+        "simple php dic",
         "dic autowiring",
         "simple php dic",
         "wordpress dic",
