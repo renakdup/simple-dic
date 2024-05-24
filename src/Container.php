@@ -8,7 +8,7 @@
  * Author Email: renakdup@gmail.com
  * Author Site: https://wp-yoda.com/en/
  *
- * Version: 1.1.0
+ * Version: 1.1.1
  * Source Code: https://github.com/renakdup/simple-php-dic
  *
  * Licence: MIT License

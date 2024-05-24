@@ -37,9 +37,13 @@
         "phpstan/phpstan-deprecation-rules": "^1.1",
         "rregeer/phpunit-coverage-check": "^0.3.1"
     },
+    "autoload": {
+        "psr-4": {
+            "Renakdup\\SimpleDIC\\": "src/"
+        }
+    },
     "autoload-dev": {
         "psr-4": {
-            "Renakdup\\SimpleDIC\\": "src/",
             "RenakdupTests\\SimpleDIC\\": "tests/"
         }
     },
