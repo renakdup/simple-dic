@@ -5,7 +5,6 @@
 [![PHP Version Require](http://poser.pugx.org/renakdup/simple-dic/require/php)](https://packagist.org/packages/renakdup/simple-dic)
 [![Latest Stable Version](http://poser.pugx.org/renakdup/simple-dic/v)](https://packagist.org/packages/renakdup/simple-dic)
 [![Total Downloads](http://poser.pugx.org/renakdup/simple-dic/downloads)](https://packagist.org/packages/renakdup/simple-dic)
-#[![Dependents](http://poser.pugx.org/renakdup/simple-dic/dependents)](https://packagist.org/packages/renakdup/simple-dic)
 
 Simple DI Container with **autowiring** in a single file **with NO dependencies** allows you to easily use it in your PHP applications and especially convenient for **WordPress** plugins and themes. 
 
