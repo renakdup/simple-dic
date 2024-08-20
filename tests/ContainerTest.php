@@ -15,7 +15,6 @@ use RenakdupTests\SimpleDIC\Assets\ClassWithConstructorPrimitives;
 use RenakdupTests\SimpleDIC\Assets\ClassWithConstructor;
 use RenakdupTests\SimpleDIC\Assets\ClassWithConstructorDepsException;
 use RenakdupTests\SimpleDIC\Assets\ParentClass;
-use RenakdupTests\SimpleDIC\Assets\PrivateConstructor;
 use RenakdupTests\SimpleDIC\Assets\SomeInterface;
 use RenakdupTests\SimpleDIC\Assets\SimpleClass;
 use RenakdupTests\SimpleDIC\Assets\UseAbstractClass;
@@ -124,9 +123,7 @@ final class ContainerTest extends TestCase {
 	}
 
 	public function test_get__singleton_for_resolved_child_dependencies(): void {
-		/**
-		 * @var $obj1 ClassWithConstructor
-		 */
+		/** @var ClassWithConstructor $obj1 */
 		$obj1 = $this->container->get( ClassWithConstructor::class );
 
 		self::assertSame(
@@ -211,11 +208,9 @@ final class ContainerTest extends TestCase {
 	}
 
 	public function test_make(): void {
-		/**
-		 * @var $obj1 ClassWithConstructorPrimitives
-		 * @var $obj2 ClassWithConstructorPrimitives
-		 */
+		/** @var ClassWithConstructorPrimitives $obj1 */
 		$obj1 = $this->container->make( ClassWithConstructorPrimitives::class );
+		/** @var ClassWithConstructorPrimitives $obj2 */
 		$obj2 = $this->container->make( ClassWithConstructorPrimitives::class );
 
 		self::assertNotSame( $obj1, $obj2 );
@@ -250,5 +245,9 @@ final class ContainerTest extends TestCase {
 
 		self::assertTrue( $this->container->has( $name ) );
 		self::assertFalse( $this->container->has( 'not-exist' ) );
+
+		$this->container->get( SimpleClass::class );
+		self::assertTrue( $this->container->has( SimpleClass::class ) );
 	}
+
 }
