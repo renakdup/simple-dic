@@ -8,7 +8,7 @@
  * Author Email: renakdup@gmail.com
  * Author Site: https://wp-yoda.com/en/
  *
- * Version: 1.1.2
+ * Version: 1.2.2
  * Source Code: https://github.com/renakdup/simple-dic
  *
  * Licence: MIT License
@@ -80,7 +80,6 @@ class Container {
 		}
 
 		$service = $this->resolve( $id );
-
 		$this->resolved[ $id ] = $service;
 
 		return $service;
@@ -98,7 +97,7 @@ class Container {
 	 * @return bool
 	 */
 	public function has( string $id ): bool {
-		return array_key_exists( $id, $this->services );
+		return array_key_exists( $id, $this->resolved ) || array_key_exists( $id, $this->services );
 	}
 
 	/**
