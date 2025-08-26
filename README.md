@@ -209,7 +209,7 @@ in progress
 - [x] Integrate CI with running autotests
 - [x] Add badges with tests passed
 - [x] Add PHPStan analyzer
-- [ ] Add code coverage badge
+- [x] Add code coverage badge
 - [ ] Add descriptions in the code for functions.
 - [ ] Choose codestyle
 - [ ] Add on packegist
