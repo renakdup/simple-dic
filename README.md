@@ -60,16 +60,7 @@ $paypal = $container->get( Paypal::class );
 $paypal->pay();
 ```
 
-SimpleDIC allows to set values for the container for primitive types:
-```php
-$container->set( 'requests_limit', 100 );
-$container->set( 'post_type', 'products' );
-$container->set( 'users_ids', [ 1, 2, 3, 4] );
-
-$user_ids = $container->get( 'users_ids', [ 1, 2, 3, 4] );
-```
-
-Method `get()` can resolve not set object in the `$container` and then save resolved results in the `$container`. It means when you run `$container->get( $service )` several times you get the same object.
+Method `get()` works as a singleton. Service will be resolved once and cached inside the `$container`, new invocations of the `get()` method return the same object.
 
 ```php
 $obj1 = $constructor->get( Paypal::class );
@@ -77,7 +68,13 @@ $obj2 = $constructor->get( Paypal::class );
 var_dump( $obj1 === $obj2 ) // true
 ```
 
-If you want to instantiate service several time use `make()` method. 
+If you want to instantiate a service several times, then use the `make()` method. 
+
+```php
+$obj1 = $constructor->make( Paypal::class );
+$obj2 = $constructor->make( Paypal::class );
+var_dump( $obj1 === $obj2 ) // false
+```
 
 ---
 
@@ -99,6 +96,18 @@ $container->set( Paypal::class, function () {
 } );
 
 $paypal = $constructor->get( Paypal::class ); // PayPal instance created
+```
+
+---
+
+### Primitives
+SimpleDIC allows setting values for the container for primitive types:
+```php
+$container->set( 'requests_limit', 100 );
+$container->set( 'post_type', 'products' );
+$container->set( 'users_ids', [ 1, 2, 3, 4] );
+
+$user_ids = $container->get( 'users_ids', [ 1, 2, 3, 4] );
 ```
 
 ---
@@ -214,8 +223,8 @@ in progress
 - [x] Add code coverage badge
 - [ ] Add descriptions in the code for functions.
 - [ ] Choose codestyle
-- [ ] Add on packegist
-- [ ] Add if class exist checks in the Container file?
+- [x] Add on packagist
+- [ ] Add if class exists checks in the Container file?
 - [ ] Rename Container.php to SimpleContainer.php
 - [ ] Show stack trace when I have a debug only?
 - [ ] PHP 8 named arguments and autowiring.
