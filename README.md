@@ -1,4 +1,4 @@
-# Simple DIC - PHP DI Container in one file for your WordPress.
+# Simple DIC - WordPress DI Container in one file for your plugin/project.
 [![UnitTests](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpunit.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpunit.yaml)
 [![PHPStan](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpstan.yaml/badge.svg)](https://github.com/renakdup/simple-wordpress-dic/actions/workflows/phpstan.yaml)
 
@@ -6,7 +6,7 @@
 [![PHP Version Require](https://poser.pugx.org/renakdup/simple-dic/require/php)](https://packagist.org/packages/renakdup/simple-dic)
 [![Total Downloads](https://poser.pugx.org/renakdup/simple-dic/downloads)](https://packagist.org/packages/renakdup/simple-dic)
 
-Simple DI Container with **autowiring** in a single file **with NO dependencies** allows you to easily use it in your PHP applications and especially convenient for **WordPress** plugins and themes. 
+WordPress DI Container with **autowiring** in a single file **with NO dependencies** allows you to easily use it in your PHP applications and especially convenient for **WordPress** plugins and themes. 
 
 > [!IMPORTANT]  
 > **100% code coverage**
